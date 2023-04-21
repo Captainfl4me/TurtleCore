@@ -1,0 +1,1 @@
+Copy-Item ".\build\Debug\out.bin" -Destination ".\"
