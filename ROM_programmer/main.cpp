@@ -5,7 +5,7 @@
 //Define instruction
 
 #define HLT  0b1000000000000000
-#define MI   0b010000000000000
+#define MI   0b0100000000000000
 #define RI   0b0010000000000000
 #define RO   0b0001000000000000
 #define IO   0b0000100000000000
@@ -33,8 +33,12 @@ int main(int, char**) {
     cout << "Size of data (bits): " << data_size << endl;
 
     for(unsigned int i = 0; i < ROM_size; i++){
-        data[i] = 0x1234;
+        data[i] = 0x0000;
+        if(i % 256 == 0) data[i] = MI|CO;
+        if(i % 256 == 1) data[i] = RO|II|CE;
     }
+
+    data[0xa902] = MI|CO; data[0xa903] = RO|AI|CE;// lda
 
     for(unsigned int i = 0; i < ROM_size; i++){
         data[i] = REV16_A(data[i]);
