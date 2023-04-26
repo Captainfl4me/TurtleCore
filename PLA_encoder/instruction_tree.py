@@ -76,3 +76,9 @@ for i in range(tree_size):
   for j in range(i):  
     sys.stdout.write("0") 
   sys.stdout.write("\n") 
+  
+instructions = [
+  "BRK",
+  "JSR",
+  "RTI"
+]

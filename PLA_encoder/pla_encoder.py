@@ -69,12 +69,24 @@ def convertBinToStr(binary, fill):
 def formatPLALine(addr, out):
   return convertBinToStr(addr, 12) + ' ' + convertBinToStr(out, 62) + '\n'
 
+def createOpCodeFromabc(a, b, c):
+  return hex(a << 5 | b << 2 | c )
+
+def createAddress(opcode, microCounter):
+  return opcode << 4 | 0 | microCounter
+
+# intruction OPCODE
+LDA = [ 0xa1, 0xa5, 0xa9, 0xad, 0xb1, 0xb5, 0xb9, 0xbd ]
+
 file = open('DecodePLA.txt', 'w')
 # write first line of file
 file.write('# Logisim PLA program table\n')
 
 # LDA immediate
-file.write(formatPLALine(0, RW))
+file.write(formatPLALine(createAddress(LDA[2], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH))
+file.write(formatPLALine(createAddress(LDA[2], 3), DL_DB|DB_ADD|O_ADD|SUMS))
+file.write(formatPLALine(createAddress(LDA[2], 4), ADD_SB06|ADD_SB7|SB_AC|I_PC))
+file.write(formatPLALine(createAddress(LDA[2], 5), PCL_PCL|PCH_PCH))
 
 # Close the file
 file.close()
