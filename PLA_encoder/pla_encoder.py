@@ -84,9 +84,16 @@ file.write('# Logisim PLA program table\n')
 
 # LDA immediate
 file.write(formatPLALine(createAddress(LDA[2], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH))
-file.write(formatPLALine(createAddress(LDA[2], 3), DL_DB|DB_ADD|O_ADD|SUMS))
-file.write(formatPLALine(createAddress(LDA[2], 4), ADD_SB06|ADD_SB7|SB_AC|I_PC))
-file.write(formatPLALine(createAddress(LDA[2], 5), PCL_PCL|PCH_PCH))
+file.write(formatPLALine(createAddress(LDA[2], 3), DL_DB|DB_ADD|O_ADD|SUMS|I_PC))
+file.write(formatPLALine(createAddress(LDA[2], 4), ADD_SB06|ADD_SB7|SB_AC|PCL_PCL|PCH_PCH))
+
+# LDA absolute
+file.write(formatPLALine(createAddress(LDA[3], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
+file.write(formatPLALine(createAddress(LDA[3], 3), DL_DB|DB_ADD|O_ADD|PCL_PCL|PCH_PCH))
+file.write(formatPLALine(createAddress(LDA[3], 4), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|SUMS))
+file.write(formatPLALine(createAddress(LDA[3], 5), DL_ADH|ADH_ABH|ADD_ADL|ADL_ABL|I_PC))
+file.write(formatPLALine(createAddress(LDA[3], 6), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS))
+file.write(formatPLALine(createAddress(LDA[3], 7), ADD_SB06|ADD_SB7|SB_AC))
 
 # Close the file
 file.close()
