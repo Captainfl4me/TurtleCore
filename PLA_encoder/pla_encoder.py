@@ -76,15 +76,20 @@ def createAddress(opcode, microCounter):
   return opcode << 4 | 0 | microCounter
 
 # intruction OPCODE
+BRK = [ 0x00 ]
 LDA = [ 0xa1, 0xa5, 0xa9, 0xad, 0xb1, 0xb5, 0xb9, 0xbd ]
 
 file = open('DecodePLA.txt', 'w')
 # write first line of file
 file.write('# Logisim PLA program table\n')
 
+# Share fetch opcode
+file.write("xxxxxxxxx000" + ' ' + convertBinToStr(ADH_ABH|ADL_ABL|I_PC|PCL_ADL|PCH_ADH, 62) + '\n')
+file.write("xxxxxxxxx001" + ' ' + convertBinToStr(PCL_PCL|PCH_ADH, 62) + '\n')
+
 # LDA immediate
 file.write(formatPLALine(createAddress(LDA[2], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH))
-file.write(formatPLALine(createAddress(LDA[2], 3), DL_DB|DB_ADD|O_ADD|SUMS|I_PC))
+file.write(formatPLALine(createAddress(LDA[2], 3), DL_DB|DB_ADD|O_ADD|SUMS|I_PC|DBZ_Z|DB7_N|SB_X))
 file.write(formatPLALine(createAddress(LDA[2], 4), ADD_SB06|ADD_SB7|SB_AC|PCL_PCL|PCH_PCH))
 
 # LDA absolute
@@ -92,8 +97,19 @@ file.write(formatPLALine(createAddress(LDA[3], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_A
 file.write(formatPLALine(createAddress(LDA[3], 3), DL_DB|DB_ADD|O_ADD|PCL_PCL|PCH_PCH))
 file.write(formatPLALine(createAddress(LDA[3], 4), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|SUMS))
 file.write(formatPLALine(createAddress(LDA[3], 5), DL_ADH|ADH_ABH|ADD_ADL|ADL_ABL|I_PC))
-file.write(formatPLALine(createAddress(LDA[3], 6), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS))
+file.write(formatPLALine(createAddress(LDA[3], 6), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS|DBZ_Z|DB7_N|SB_X))
 file.write(formatPLALine(createAddress(LDA[3], 7), ADD_SB06|ADD_SB7|SB_AC))
+
+# Close the file
+file.close()
+
+
+file = open('ResetPLA.txt', 'w')
+# write first line of file
+file.write('# Logisim PLA program table\n')
+
+file.write("001" + ' ' + convertBinToStr(DL_ADL|ADL_PCL, 62) + '\n')
+file.write("010" + ' ' + convertBinToStr(DL_ADH|ADH_PCH, 62) + '\n')
 
 # Close the file
 file.close()
