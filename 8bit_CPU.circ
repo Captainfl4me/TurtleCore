@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project source="3.8.0" version="1.0">
-  This file is intended to be loaded by Logisim-evolution v3.8.0(https://github.com/logisim-evolution/).
+<project source="3.7.2" version="1.0">
+  This file is intended to be loaded by Logisim-evolution v3.7.2(https://github.com/logisim-evolution/).
 
   <lib desc="#Wiring" name="0">
     <tool name="Splitter">
@@ -337,7 +337,7 @@
     </comp>
     <comp lib="0" loc="(1460,880)" name="Tunnel">
       <a name="facing" val="north"/>
-      <a name="label" val="PCL_DB"/>
+      <a name="label" val="PCH_DB"/>
     </comp>
     <comp lib="0" loc="(1500,1400)" name="Tunnel">
       <a name="facing" val="south"/>
@@ -563,7 +563,6 @@
     <comp lib="0" loc="(2150,1280)" name="Pin">
       <a name="appearance" val="classic"/>
       <a name="facing" val="north"/>
-      <a name="initial" val="0xfffc"/>
       <a name="label" val="ResetVectorLB"/>
       <a name="width" val="16"/>
     </comp>
@@ -581,7 +580,6 @@
     <comp lib="0" loc="(2350,1280)" name="Pin">
       <a name="appearance" val="classic"/>
       <a name="facing" val="north"/>
-      <a name="initial" val="0xfffd"/>
       <a name="label" val="ResetVectorHB"/>
       <a name="width" val="16"/>
     </comp>
