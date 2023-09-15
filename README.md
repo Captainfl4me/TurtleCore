@@ -5,5 +5,5 @@ This is a homemade 8bits CPU architecture. The goal of this project is to learn 
 ## CPU Architecture
 
 As all CPU Turtle core 1 is motsly build around differente register links with multiple 8bits BUS.
-![Register Architecture](Docs/TurtleCoreDiagram.drawio/svg)
+![Register Architecture](Docs/TurtleCoreDiagram.drawio.svg)
 
