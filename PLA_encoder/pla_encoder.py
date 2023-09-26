@@ -77,6 +77,7 @@ def createAddress(opcode, microCounter):
 
 # intruction OPCODE
 BRK = [ 0x00 ]
+LDY = [ 0xa0, 0xa4,   -1, 0xac,   -1, 0xb4,   -1, 0xbc ]
 LDA = [ 0xa1, 0xa5, 0xa9, 0xad, 0xb1, 0xb5, 0xb9, 0xbd ]
 
 file = open('DecodePLA.txt', 'w')
@@ -85,12 +86,23 @@ file.write('# Logisim PLA program table\n')
 
 # Share fetch opcode
 file.write("xxxxxxxxx000" + ' ' + convertBinToStr(ADH_ABH|ADL_ABL|I_PC|PCL_ADL|PCH_ADH, 62) + '\n')
-file.write("xxxxxxxxx001" + ' ' + convertBinToStr(PCL_PCL|PCH_ADH, 62) + '\n')
+file.write("xxxxxxxxx001" + ' ' + convertBinToStr(PCL_PCL|PCH_PCH, 62) + '\n')
+
+# LDY immediate
+file.write(formatPLALine(createAddress(LDY[0], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
+file.write(formatPLALine(createAddress(LDY[0], 3), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS|DBZ_Z|DB7_N))
+file.write(formatPLALine(createAddress(LDY[0], 4), ADD_SB06|ADD_SB7|SB_Y))
+
+# LDA zeropage
+file.write(formatPLALine(createAddress(LDA[1], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
+file.write(formatPLALine(createAddress(LDA[1], 3), PCL_PCL|PCH_PCH|DL_ADL|ADL_ABL|O_ADH0|O_ADH17|ADH_ABH));
+file.write(formatPLALine(createAddress(LDA[1], 4), DL_DB|DB_ADD|O_ADD|SUMS|DBZ_Z|DB7_N|SB_X))
+file.write(formatPLALine(createAddress(LDA[1], 5), ADD_SB06|ADD_SB7|SB_AC))
 
 # LDA immediate
-file.write(formatPLALine(createAddress(LDA[2], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH))
-file.write(formatPLALine(createAddress(LDA[2], 3), DL_DB|DB_ADD|O_ADD|SUMS|I_PC|DBZ_Z|DB7_N|SB_X))
-file.write(formatPLALine(createAddress(LDA[2], 4), ADD_SB06|ADD_SB7|SB_AC|PCL_PCL|PCH_PCH))
+file.write(formatPLALine(createAddress(LDA[2], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
+file.write(formatPLALine(createAddress(LDA[2], 3), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS|DBZ_Z|DB7_N|SB_X))
+file.write(formatPLALine(createAddress(LDA[2], 4), ADD_SB06|ADD_SB7|SB_AC))
 
 # LDA absolute
 file.write(formatPLALine(createAddress(LDA[3], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
@@ -100,6 +112,24 @@ file.write(formatPLALine(createAddress(LDA[3], 5), DL_ADH|ADH_ABH|ADD_ADL|ADL_AB
 file.write(formatPLALine(createAddress(LDA[3], 6), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS|DBZ_Z|DB7_N|SB_X))
 file.write(formatPLALine(createAddress(LDA[3], 7), ADD_SB06|ADD_SB7|SB_AC))
 
+
+# LDA absolute, Y
+file.write(formatPLALine(createAddress(LDA[6], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
+file.write(formatPLALine(createAddress(LDA[6], 3), PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C))
+file.write(formatPLALine(createAddress(LDA[6], 4), PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS))
+file.write(formatPLALine(createAddress(LDA[6], 5), ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C))
+file.write(formatPLALine(createAddress(LDA[6], 6), DL_DB|DB_ADD|O_ADD|SUMS))
+file.write(formatPLALine(createAddress(LDA[6], 7), ADD_SB06|ADD_SB7|DBZ_Z|DB7_N|SB_AC))
+
+
+# LDA absolute, X
+file.write(formatPLALine(createAddress(LDA[6], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
+file.write(formatPLALine(createAddress(LDA[6], 3), PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C))
+file.write(formatPLALine(createAddress(LDA[6], 4), PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS))
+file.write(formatPLALine(createAddress(LDA[6], 5), ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C))
+file.write(formatPLALine(createAddress(LDA[6], 6), DL_DB|DB_ADD|O_ADD|SUMS))
+file.write(formatPLALine(createAddress(LDA[6], 7), ADD_SB06|ADD_SB7|DBZ_Z|DB7_N|SB_AC))
+
 # Close the file
 file.close()
 
@@ -108,7 +138,8 @@ file = open('ResetPLA.txt', 'w')
 # write first line of file
 file.write('# Logisim PLA program table\n')
 
-file.write("001" + ' ' + convertBinToStr(DL_ADL|ADL_PCL, 62) + '\n')
+file.write("000" + ' ' + convertBinToStr(DBx_ADD|O_ADD|SUMS, 62) + '\n')
+file.write("001" + ' ' + convertBinToStr(DL_ADL|ADL_PCL|ADD_SB06|ADD_SB7|SB_S, 62) + '\n')
 file.write("010" + ' ' + convertBinToStr(DL_ADH|ADH_PCH, 62) + '\n')
 
 # Close the file
