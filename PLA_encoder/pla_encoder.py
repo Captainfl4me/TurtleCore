@@ -144,3 +144,18 @@ file.write("010" + ' ' + convertBinToStr(DL_ADH|ADH_PCH, 62) + '\n')
 
 # Close the file
 file.close()
+
+file = open('Vectors.txt', 'w')
+# write first line of file
+file.write('# Logisim PLA program table\n')
+
+# Reset vector
+file.write("010" + ' ' + convertBinToStr(0xfffc, 16) + '\n')
+file.write("011" + ' ' + convertBinToStr(0xfffd, 16) + '\n')
+
+# IRQ/BRK vector
+file.write("100" + ' ' + convertBinToStr(0xfffe, 16) + '\n')
+file.write("101" + ' ' + convertBinToStr(0xffff, 16) + '\n')
+
+# Close the file
+file.close()
