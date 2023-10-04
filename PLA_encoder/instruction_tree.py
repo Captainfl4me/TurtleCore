@@ -64,7 +64,8 @@ cpu_controls = [
   "AVR_V",
   "I_V",
   "DB7_N",
-  "RW"
+  "RW",
+  "RST_CYCLE"
 ]
 tree_size = len(cpu_controls)
 
@@ -76,9 +77,3 @@ for i in range(tree_size):
   for j in range(i):  
     sys.stdout.write("0") 
   sys.stdout.write("\n") 
-  
-instructions = [
-  "BRK",
-  "JSR",
-  "RTI"
-]
