@@ -81,6 +81,7 @@ def createAddress(opcode, microCounter):
 BRK = [ 0x00 ]
 LDY = [ 0xa0, 0xa4,   -1, 0xac,   -1, 0xb4,   -1, 0xbc ]
 LDA = [ 0xa1, 0xa5, 0xa9, 0xad, 0xb1, 0xb5, 0xb9, 0xbd ]
+TSX = [ 0xba ]
 
 
 # Interrupt vectors control
@@ -158,6 +159,9 @@ file.write(formatPLALine(createAddress(LDA[6], 5), ADD_SB06|ADD_SB7|SB_ADH|ADH_A
 file.write(formatPLALine(createAddress(LDA[6], 6), DL_DB|DB_ADD|O_ADD|SUMS))
 file.write(formatPLALine(createAddress(LDA[6], 7), ADD_SB06|ADD_SB7|DBZ_Z|DB7_N|SB_AC))
 file.write(formatPLALine(createAddress(LDA[6], 8), RST_CYCLE))
+
+# TSX impl
+file.write(formatPLALine(createAddress(TSX[0], 2), S_SB|SB_X|SB_DB|DBZ_Z|DB7_N))
 
 # Close the file
 file.close()
