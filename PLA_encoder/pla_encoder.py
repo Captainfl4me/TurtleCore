@@ -1,4 +1,7 @@
 # Control constants
+from re import T
+
+
 DL_DB = 0b000000000000000000000000000000000000000000000000000000000000001
 DL_ADL = 0b000000000000000000000000000000000000000000000000000000000000010
 DL_ADH = 0b000000000000000000000000000000000000000000000000000000000000100
@@ -81,6 +84,8 @@ def createAddress(opcode, microCounter):
 BRK = [ 0x00 ]
 LDY = [ 0xa0, 0xa4,   -1, 0xac,   -1, 0xb4,   -1, 0xbc ]
 LDA = [ 0xa1, 0xa5, 0xa9, 0xad, 0xb1, 0xb5, 0xb9, 0xbd ]
+TYA = [ 0x98 ]
+TXA = [ 0x8a ]
 TSX = [ 0xba ]
 TXS = [ 0x9a ]
 
@@ -165,6 +170,12 @@ file.write(formatPLALine(createAddress(LDA[6], 8), RST_CYCLE))
 file.write(formatPLALine(createAddress(TSX[0], 2), S_SB|SB_X|SB_DB|DBZ_Z|DB7_N))
 # TXS impl
 file.write(formatPLALine(createAddress(TXS[0], 2), X_SB|SB_S))
+
+# TXA impl
+file.write(formatPLALine(createAddress(TXA[0], 2), X_SB|SB_AC|SB_DB|DBZ_Z|DB7_N))
+
+# TYA impl
+file.write(formatPLALine(createAddress(TYA[0], 2), Y_SB|SB_AC|SB_DB|DBZ_Z|DB7_N))
 
 # Close the file
 file.close()
