@@ -90,6 +90,7 @@ TAY = [ 0xa8 ]
 TAX = [ 0xaa ]
 TSX = [ 0xba ]
 TXS = [ 0x9a ]
+STA = [ 0x81, 0x85, 0x8d, 0x91, 0x95, 0x99, 0x9d ]
 
 
 # Interrupt vectors control
@@ -143,12 +144,11 @@ file.write(formatPLALine(createAddress(LDA[2], 5), RST_CYCLE))
 
 # LDA absolute
 file.write(formatPLALine(createAddress(LDA[3], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
-file.write(formatPLALine(createAddress(LDA[3], 3), DL_DB|DB_ADD|O_ADD|PCL_PCL|PCH_PCH))
-file.write(formatPLALine(createAddress(LDA[3], 4), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|SUMS))
-file.write(formatPLALine(createAddress(LDA[3], 5), DL_ADH|ADH_ABH|ADD_ADL|ADL_ABL|I_PC))
-file.write(formatPLALine(createAddress(LDA[3], 6), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS|DBZ_Z|DB7_N|SB_X))
-file.write(formatPLALine(createAddress(LDA[3], 7), ADD_SB06|ADD_SB7|SB_AC))
-file.write(formatPLALine(createAddress(LDA[3], 8), RST_CYCLE))
+file.write(formatPLALine(createAddress(LDA[3], 3), DL_DB|DB_ADD|O_ADD|PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|SUMS))
+file.write(formatPLALine(createAddress(LDA[3], 4), DL_ADH|ADH_ABH|ADD_ADL|ADL_ABL|I_PC))
+file.write(formatPLALine(createAddress(LDA[3], 5), PCL_PCL|PCH_PCH|DL_DB|DB_ADD|O_ADD|SUMS|DBZ_Z|DB7_N|SB_X))
+file.write(formatPLALine(createAddress(LDA[3], 6), ADD_SB06|ADD_SB7|SB_AC))
+file.write(formatPLALine(createAddress(LDA[3], 7), RST_CYCLE))
 
 # LDA absolute, Y
 file.write(formatPLALine(createAddress(LDA[6], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
@@ -167,6 +167,13 @@ file.write(formatPLALine(createAddress(LDA[6], 5), ADD_SB06|ADD_SB7|SB_ADH|ADH_A
 file.write(formatPLALine(createAddress(LDA[6], 6), DL_DB|DB_ADD|O_ADD|SUMS))
 file.write(formatPLALine(createAddress(LDA[6], 7), ADD_SB06|ADD_SB7|DBZ_Z|DB7_N|SB_AC))
 file.write(formatPLALine(createAddress(LDA[6], 8), RST_CYCLE))
+
+# STA absolute
+file.write(formatPLALine(createAddress(STA[2], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
+file.write(formatPLALine(createAddress(STA[2], 3), DL_DB|DB_ADD|O_ADD|PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|SUMS))
+file.write(formatPLALine(createAddress(STA[2], 4), DL_ADH|ADH_ABH|ADD_ADL|ADL_ABL|I_PC|AC_DB))
+file.write(formatPLALine(createAddress(STA[2], 5), PCL_PCL|PCH_PCH|RW))
+file.write(formatPLALine(createAddress(STA[6], 6), RST_CYCLE))
 
 # TSX impl
 file.write(formatPLALine(createAddress(TSX[0], 2), S_SB|SB_X|SB_DB|DBZ_Z|DB7_N))

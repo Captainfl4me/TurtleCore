@@ -48,6 +48,7 @@ $A9 | LDA #
 $AD | LDA abs
 $BD | LDA abs, X
 $B9 | LDA abs, Y
+$8D | STA abs
 $BA | TSX
 $9A | TXS
 $8A | TXA
