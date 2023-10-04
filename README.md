@@ -49,6 +49,7 @@ $AD | LDA abs
 $BD | LDA abs, X
 $B9 | LDA abs, Y
 $BA | TSX
+$9A | TSX
 
 ### Memory
 As the adress bus of the CPU is a 16-bits bus we can access 65537 space of 8-bits (1 byte) for a total memory of 65.537KB. The memory will be handle as follow:

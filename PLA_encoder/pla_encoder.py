@@ -82,6 +82,7 @@ BRK = [ 0x00 ]
 LDY = [ 0xa0, 0xa4,   -1, 0xac,   -1, 0xb4,   -1, 0xbc ]
 LDA = [ 0xa1, 0xa5, 0xa9, 0xad, 0xb1, 0xb5, 0xb9, 0xbd ]
 TSX = [ 0xba ]
+TXS = [ 0x9a ]
 
 
 # Interrupt vectors control
@@ -162,6 +163,8 @@ file.write(formatPLALine(createAddress(LDA[6], 8), RST_CYCLE))
 
 # TSX impl
 file.write(formatPLALine(createAddress(TSX[0], 2), S_SB|SB_X|SB_DB|DBZ_Z|DB7_N))
+# TXS impl
+file.write(formatPLALine(createAddress(TXS[0], 2), X_SB|SB_S))
 
 # Close the file
 file.close()
