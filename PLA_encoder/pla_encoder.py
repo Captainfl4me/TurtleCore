@@ -86,6 +86,8 @@ LDY = [ 0xa0, 0xa4,   -1, 0xac,   -1, 0xb4,   -1, 0xbc ]
 LDA = [ 0xa1, 0xa5, 0xa9, 0xad, 0xb1, 0xb5, 0xb9, 0xbd ]
 TYA = [ 0x98 ]
 TXA = [ 0x8a ]
+TAY = [ 0xa8 ]
+TAX = [ 0xaa ]
 TSX = [ 0xba ]
 TXS = [ 0x9a ]
 
@@ -173,9 +175,13 @@ file.write(formatPLALine(createAddress(TXS[0], 2), X_SB|SB_S))
 
 # TXA impl
 file.write(formatPLALine(createAddress(TXA[0], 2), X_SB|SB_AC|SB_DB|DBZ_Z|DB7_N))
+# TAX impl
+file.write(formatPLALine(createAddress(TAX[0], 2), AC_SB|SB_X|SB_DB|DBZ_Z|DB7_N))
 
 # TYA impl
 file.write(formatPLALine(createAddress(TYA[0], 2), Y_SB|SB_AC|SB_DB|DBZ_Z|DB7_N))
+# TAY impl
+file.write(formatPLALine(createAddress(TAY[0], 2), AC_SB|SB_Y|SB_DB|DBZ_Z|DB7_N))
 
 # Close the file
 file.close()
