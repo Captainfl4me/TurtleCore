@@ -1,8 +1,8 @@
-import sys
+"""
+  This module generate all the label constants for the PLA encoder (int the file control_flags.py).
+"""
 
-# Write python code for all label constant (map them to a binary output)
-
-cpu_controls = [
+CPU_CONTROLS = [
   "DL_DB",
   "DL_ADL",
   "DL_ADH",
@@ -67,13 +67,21 @@ cpu_controls = [
   "RW",
   "RST_CYCLE"
 ]
-tree_size = len(cpu_controls)
+TREE_SIZE = len(CPU_CONTROLS)
 
-for i in range(tree_size):
-  sys.stdout.write(cpu_controls[i] + " = 0b") 
-  for j in range(tree_size - i - 1):
-    sys.stdout.write("0") 
-  sys.stdout.write("1") 
-  for j in range(i):  
-    sys.stdout.write("0") 
-  sys.stdout.write("\n") 
+# Interrupt vectors control
+with open(file="./Python_logic_generator/control_flags.py", mode="w", encoding="utf-8") as file:
+    file.write('"""\nThis module contains control flags definition.\n"""\n\n')
+
+    for i in range(TREE_SIZE):
+        file.write(CPU_CONTROLS[i] + " = 0b")
+        for j in range(TREE_SIZE - i - 1):
+            file.write("0")
+        file.write("1")
+        for j in range(i):
+            file.write("0")
+        file.write("\n")
+
+    file.write("\n")
+    file.write(f"PLAOUT_LEN = {TREE_SIZE}\n")
+    file.write("\n")
