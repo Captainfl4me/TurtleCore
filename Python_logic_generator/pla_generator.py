@@ -2,8 +2,161 @@
 This module contains functions for encoding decoding instructions logic
 into binary format for a PLA (Programmable Logic Array).
 """
+from enum import Enum
 from control_flags import *
 
+
+class AdressMode:
+    """
+    This class represents a single addressing mode.
+    """
+    __short_name: str
+    __full_name: str
+
+    def __init__(self, short_name: str, full_name: str):
+        self.__short_name = short_name
+        self.__full_name = full_name
+
+    @property
+    def short_name(self) -> str:
+        return self.__short_name
+
+    @property
+    def full_name(self) -> str:
+        return self.__full_name
+
+
+class AdressModesList(Enum):
+    """
+    This class represents a list of all supported addressing modes.
+    """
+
+    A = AdressMode('A', 'Accumulator')
+    ABS = AdressMode('abs', 'Absolute')
+    ABSX = AdressMode('abs,X', 'Absolute, X-indexed')
+    ABSY = AdressMode('abs,Y', 'Absolute, Y-indexed')
+    IMM = AdressMode('#', 'Immediate')
+    IMP = AdressMode('imp', 'Implied')
+    IND = AdressMode('ind', 'Indirect')
+    XIND = AdressMode('X,ind', 'X-indexed, indirect')
+    INDY = AdressMode('ind,Y', 'Indirect, Y-indexed')
+    REL = AdressMode('rel', 'Relative')
+    ZPG = AdressMode('zpg', 'Zero Page')
+    ZPGX = AdressMode('zpg,X', 'Zero Page, X-indexed')
+    ZPGY = AdressMode('zpg,Y', 'Zero Page, Y-indexed')
+
+
+class Instruction:
+    """
+    This class represents a single instruction.
+    """
+
+    def __init__(self, name: str, opcode: int, addressing_mode: AdressModesList):
+        self.__name = name
+        self.__opcode = opcode
+        self.__addressing_mode = addressing_mode
+        self.__cycles = []
+
+        self.__apply_addressing_mode()
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    @property
+    def opcode(self) -> int:
+        return self.__opcode
+
+    @property
+    def addressing_mode(self) -> AdressModesList:
+        return self.__addressing_mode
+
+    @property
+    def cycles(self) -> list:
+        return self.__cycles
+
+    def __apply_addressing_mode(self):
+        if self.__addressing_mode == AdressModesList.A:
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH)
+        elif self.__addressing_mode == AdressModesList.ABS:
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, DL_DB|DB_ADD|O_ADD|PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|SUMS)
+            self.append_hex_to_cycle(4, DL_ADH|ADH_ABH|ADD_ADL|ADL_ABL|I_PC)
+        elif self.__addressing_mode == AdressModesList.ABSX:
+            raise NotImplementedError('Absolute, X-indexed addressing mode is not implemented yet!')
+        elif self.__addressing_mode == AdressModesList.ABSY:
+            raise NotImplementedError('Absolute, Y-indexed addressing mode is not implemented yet!')
+        elif self.__addressing_mode == AdressModesList.IMM:
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH)
+        elif self.__addressing_mode == AdressModesList.IMP:
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH)
+        elif self.__addressing_mode == AdressModesList.IND:
+            raise NotImplementedError('Indirect addressing mode is not implemented yet!')
+        elif self.__addressing_mode == AdressModesList.XIND:
+            raise NotImplementedError('X-indexed, indirect addressing mode is not implemented yet!')
+        elif self.__addressing_mode == AdressModesList.INDY:
+            raise NotImplementedError('Indirect, Y-indexed addressing mode is not implemented yet!')
+        elif self.__addressing_mode == AdressModesList.REL:
+            raise NotImplementedError('Relative addressing mode is not implemented yet!')
+        elif self.__addressing_mode == AdressModesList.ZPG:
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|DL_ADL|ADL_ABL|O_ADH0|O_ADH17|ADH_ABH)
+        elif self.__addressing_mode == AdressModesList.ZPGX:
+            raise NotImplementedError('Zero Page, X-indexed addressing mode is not implemented yet!')
+        elif self.__addressing_mode == AdressModesList.ZPGY:
+            raise NotImplementedError('Zero Page, Y-indexed addressing mode is not implemented yet!')
+
+
+    def set_cycle(self, cycle: int, value: int):
+        self.__cycles[cycle] = value
+
+    def new_cycle(self, value: int):
+        self.__cycles.append(value)
+
+    def append_hex_to_cycle(self, cycle: int, value: int):
+        if cycle <= 1:
+            raise ValueError('Cycles 0 and 1 are reserved for fetch and decode instructions!')
+
+        if len(self.__cycles) <= cycle:
+            for _ in range(len(self.__cycles), cycle):
+                self.__cycles.append(0)
+            self.__cycles.append(value)
+        else:
+            self.__cycles[cycle] = self.__cycles[cycle] | value
+
+def generate_instruction_docs(instructions: list[Instruction]) -> str:
+    """
+    This function generates markdown documentation table of all instructions.
+    """
+    return_string = 'OpCode | Instruction | Cycles\n-- | -- | --\n'
+    for instruction in instructions:
+        return_string += f"${instruction.opcode:02x} | {instruction.name} {instruction.addressing_mode.value.short_name} | {len(instruction.cycles)}\n"
+    return return_string
+
+def main():
+    instructions: list[Instruction] = []
+
+    brk = Instruction('BRK', 0x00, AdressModesList.IMP)
+    brk.set_cycle(2, DBx_ADD|O_ADD|I_ADDC|SUMS|S_ADL|ADL_ABL)
+    brk.set_cycle(3, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|PCH_DB)
+    brk.append_hex_to_cycle(4, RW|DB_ADD|S_SB|SB_ADD|SUMS)
+    brk.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_S|ADD_ADL|ADL_ABL|PCL_DB)
+    brk.append_hex_to_cycle(6, RW|DB_ADD|S_SB|SB_ADD|SUMS|SB_X)
+    brk.append_hex_to_cycle(7, ADD_SB06|ADD_SB7|SB_S|ADD_ADL|ADL_ABL|P_DB)
+    brk.append_hex_to_cycle(8, RW|DB_ADD|S_SB|SB_ADD|SUMS)
+    brk.append_hex_to_cycle(9, ADD_SB06|ADD_SB7|SB_S)
+    brk.append_hex_to_cycle(10, DL_ADL|ADL_PCL)
+    brk.append_hex_to_cycle(11, DL_ADH|ADH_PCH)
+    instructions.append(brk)
+
+    print("------ DOC INSTRCUTION TABLE -------")
+    print(generate_instruction_docs(instructions))
+    return
+
+"""
 def convertBinToStr(binary, fill = PLAOUT_LEN):
     return bin(binary)[2:].zfill(fill)
 
@@ -156,3 +309,7 @@ file.write("101" + ' ' + convertBinToStr(0xffff, 16) + '\n')
 
 # Close the file
 file.close()
+"""
+
+if __name__ == '__main__':
+    main()
