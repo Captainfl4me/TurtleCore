@@ -71,3 +71,10 @@ $8000 - $FFFF | ROM | 32,769B
 Vectors are memory adress that the CPU will load into its PC.
  - On a RESET, the CPU loads the vector from $FFFC/$FFFD into the program counter and continues fetching instructions from there.
  - On a BRK instruction, the CPU pushes the low byte and the high byte of the program counter as well as the processor status onto the stack (with bit #4 (B flag) sets), disables interrupts and loads the vector from $FFFE/$FFFF into the program counter and continues fetching instructions from there.
+
+## Tools
+### Simulation
+To simulate the behavior of our architecture we use [Logisim Evolution](https://github.com/logisim-evolution/logisim-evolution).
+
+### Assembler & Compiler
+To assemble or compile code for the CPU you can use whatever 6502 assembly assemblers or compilers compatibles. For example: [cc65](https://github.com/cc65/cc65).
