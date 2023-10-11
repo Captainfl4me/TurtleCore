@@ -210,7 +210,7 @@ def write_reset_pla() -> None:
 
 
 def write_vectors_pla() -> None:
-    file = open("Vectors.txt", "w", encoding="utf-8")
+    file = open("./PLAs/Vectors.txt", "w", encoding="utf-8")
     file.write("# Logisim PLA program table\n")
     # Reset vector
     file.write(f"010 {0xfffc:016b}\n")
@@ -267,6 +267,7 @@ def main():
     sta_abs = Instruction("STA", 0x8D, AdressModesList.ABS)
     sta_abs.append_hex_to_cycle_after_addressing(-1, AC_DB)
     sta_abs.append_hex_to_cycle_after_addressing(0, RW)
+    instructions.append(sta_abs)
 
     # TSX impl
     tsx_impl = Instruction("TSX", 0xBA, AdressModesList.IMP)
