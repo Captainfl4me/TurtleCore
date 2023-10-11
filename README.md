@@ -75,6 +75,3 @@ Vectors are memory adress that the CPU will load into its PC.
 ## Tools
 ### Simulation
 To simulate the behavior of our architecture we use [Logisim Evolution](https://github.com/logisim-evolution/logisim-evolution).
-
-### Assembler & Compiler
-To assemble or compile code for the CPU you can use whatever 6502 assembly assemblers or compilers compatibles. For example: [cc65](https://github.com/cc65/cc65).
