@@ -94,9 +94,17 @@ class Instruction:
             self.append_hex_to_cycle(4, DL_ADH | ADH_ABH | ADD_ADL | ADL_ABL | PCL_PCL | PCH_PCH)
             self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ABSX:
-            raise NotImplementedError("Absolute, X-indexed addressing mode is not implemented yet!")
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C)
+            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS)
+            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C)
+            self.__first_cycle_after_addressing = 6
         elif self.__addressing_mode == AdressModesList.ABSY:
-            raise NotImplementedError("Absolute, Y-indexed addressing mode is not implemented yet!")
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C)
+            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS)
+            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C)
+            self.__first_cycle_after_addressing = 6
         elif self.__addressing_mode == AdressModesList.IMM:
             self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
@@ -130,9 +138,7 @@ class Instruction:
 
     def append_hex_to_cycle(self, cycle: int, value: int):
         if cycle <= 1:
-            raise ValueError(
-                "Cycles 0 and 1 are reserved for fetch and decode instructions!"
-            )
+            raise ValueError("Cycles 0 and 1 are reserved for fetch and decode instructions!")
 
         if len(self.__cycles) <= cycle:
             for _ in range(len(self.__cycles), cycle):
@@ -142,9 +148,7 @@ class Instruction:
             self.__cycles[cycle] = self.__cycles[cycle] | value
 
     def append_hex_to_cycle_after_addressing(self, relative_cycle: int, value: int):
-        self.append_hex_to_cycle(
-            self.__first_cycle_after_addressing + relative_cycle, value
-        )
+        self.append_hex_to_cycle(self.__first_cycle_after_addressing + relative_cycle, value)
 
     def __str__(self) -> str:
         instr_str = ""
@@ -263,6 +267,18 @@ def main():
     lda_abs.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
     instructions.append(lda_abs)
 
+    # LDA absolute,X
+    lda_absx = Instruction("LDA", 0xBD, AdressModesList.ABSX)
+    lda_absx.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    lda_absx.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    instructions.append(lda_absx)
+
+    # LDA absolute,Y
+    lda_absy = Instruction("LDA", 0xB9, AdressModesList.ABSY)
+    lda_absy.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    lda_absy.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    instructions.append(lda_absy)
+
     # STA absolute
     sta_abs = Instruction("STA", 0x8D, AdressModesList.ABS)
     sta_abs.append_hex_to_cycle_after_addressing(-1, AC_DB)
@@ -309,25 +325,6 @@ def main():
     return
 
 
-"""
-# LDA absolute, Y
-file.write(formatPLALine(create_adress(LDA[6], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
-file.write(formatPLALine(create_adress(LDA[6], 3), PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C))
-file.write(formatPLALine(create_adress(LDA[6], 4), PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS))
-file.write(formatPLALine(create_adress(LDA[6], 5), ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C))
-file.write(formatPLALine(create_adress(LDA[6], 6), DL_DB|DB_ADD|O_ADD|SUMS))
-file.write(formatPLALine(create_adress(LDA[6], 7), ADD_SB06|ADD_SB7|DBZ_Z|DB7_N|SB_AC))
-file.write(formatPLALine(create_adress(LDA[6], 8), RST_CYCLE))
-
-# LDA absolute, X
-file.write(formatPLALine(create_adress(LDA[6], 2), PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC))
-file.write(formatPLALine(create_adress(LDA[6], 3), PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C))
-file.write(formatPLALine(create_adress(LDA[6], 4), PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS))
-file.write(formatPLALine(create_adress(LDA[6], 5), ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C))
-file.write(formatPLALine(create_adress(LDA[6], 6), DL_DB|DB_ADD|O_ADD|SUMS))
-file.write(formatPLALine(create_adress(LDA[6], 7), ADD_SB06|ADD_SB7|DBZ_Z|DB7_N|SB_AC))
-file.write(formatPLALine(create_adress(LDA[6], 8), RST_CYCLE))
-"""
-
 if __name__ == "__main__":
     main()
+

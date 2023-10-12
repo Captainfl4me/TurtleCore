@@ -39,22 +39,22 @@ There is 7 flags that are stored in the processor status.
 
 ### Intructions
 For now, this is all the instructions that are available on the CPU.
-OpCode | Instruction
--- | --
-$00 | BRK impl
-$A0 | LDY #
-$A5 | LDA zpg
-$A9 | LDA #
-$AD | LDA abs
-$BD | LDA abs, X
-$B9 | LDA abs, Y
-$8D | STA abs
-$BA | TSX
-$9A | TXS
-$8A | TXA
-$98 | TYA
-$AA | TAX
-$A8 | TAY
+OpCode | Instruction | Cycles
+-- | -- | --
+$00 | BRK imp | 12
+$a0 | LDY # | 5
+$a5 | LDA zpg | 6
+$a9 | LDA # | 5
+$ad | LDA abs | 7
+$bd | LDA abs,X | 8
+$b9 | LDA abs,Y | 8
+$8d | STA abs | 6
+$ba | TSX imp | 4
+$9a | TXS imp | 4
+$8a | TXA imp | 4
+$aa | TAX imp | 4
+$98 | TYA imp | 4
+$a8 | TAY imp | 4
 
 ### Memory
 As the adress bus of the CPU is a 16-bits bus we can access 65537 space of 8-bits (1 byte) for a total memory of 65.537KB. The memory will be handle as follow:
