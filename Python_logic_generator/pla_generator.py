@@ -285,6 +285,30 @@ def main():
     sta_abs.append_hex_to_cycle_after_addressing(0, RW)
     instructions.append(sta_abs)
 
+    # STX absolute
+    sty_abs = Instruction("STX", 0x8E, AdressModesList.ABS)
+    sty_abs.append_hex_to_cycle_after_addressing(-1, X_SB|SB_DB)
+    sty_abs.append_hex_to_cycle_after_addressing(0, RW)
+    instructions.append(sty_abs)
+
+    # STX zeropage
+    sty_zpg = Instruction("STX", 0x86, AdressModesList.ZPG)
+    sty_zpg.append_hex_to_cycle_after_addressing(-1, X_SB|SB_DB)
+    sty_zpg.append_hex_to_cycle_after_addressing(0, RW)
+    instructions.append(sty_zpg)
+
+    # STY absolute
+    sty_abs = Instruction("STY", 0x8C, AdressModesList.ABS)
+    sty_abs.append_hex_to_cycle_after_addressing(-1, Y_SB|SB_DB)
+    sty_abs.append_hex_to_cycle_after_addressing(0, RW)
+    instructions.append(sty_abs)
+
+    # STY zeropage
+    sty_zpg = Instruction("STY", 0x84, AdressModesList.ZPG)
+    sty_zpg.append_hex_to_cycle_after_addressing(-1, Y_SB|SB_DB)
+    sty_zpg.append_hex_to_cycle_after_addressing(0, RW)
+    instructions.append(sty_zpg)
+
     # TSX impl
     tsx_impl = Instruction("TSX", 0xBA, AdressModesList.IMP)
     tsx_impl.append_hex_to_cycle_after_addressing(0, X_SB | SB_S | SB_DB | DBZ_Z | DB7_N)

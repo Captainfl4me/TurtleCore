@@ -49,6 +49,10 @@ $ad | LDA abs | 7
 $bd | LDA abs,X | 8
 $b9 | LDA abs,Y | 8
 $8d | STA abs | 6
+$8e | STX abs | 6
+$86 | STX zpg | 5
+$8c | STY abs | 6
+$84 | STY zpg | 5
 $ba | TSX imp | 4
 $9a | TXS imp | 4
 $8a | TXA imp | 4
