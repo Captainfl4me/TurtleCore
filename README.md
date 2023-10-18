@@ -43,12 +43,14 @@ OpCode | Instruction | Cycles
 -- | -- | --
 $00 | BRK imp | 12
 $a0 | LDY # | 5
+$a2 | LDX # | 5
 $a5 | LDA zpg | 6
 $a9 | LDA # | 5
 $ad | LDA abs | 7
 $bd | LDA abs,X | 8
 $b9 | LDA abs,Y | 8
 $8d | STA abs | 6
+$95 | STA zpg,X | 6
 $8e | STX abs | 6
 $86 | STX zpg | 5
 $8c | STY abs | 6
@@ -79,3 +81,5 @@ Vectors are memory adress that the CPU will load into its PC.
 ## Tools
 ### Simulation
 To simulate the behavior of our architecture we use [Logisim Evolution](https://github.com/logisim-evolution/logisim-evolution).
+
+Save all assembly file under the ```/asm/``` folder and then compile with ```.\vasm\vasm6502_oldstyle.exe -Fbin -dotdir -o .\bin\out.bin .\asm\file_name.s```

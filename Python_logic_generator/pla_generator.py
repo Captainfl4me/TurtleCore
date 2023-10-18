@@ -126,9 +126,15 @@ class Instruction:
             self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH | DL_ADL | ADL_ABL | O_ADH0 | O_ADH17 | ADH_ABH)
             self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.ZPGX:
-            raise NotImplementedError("Zero Page, X-indexed addressing mode is not implemented yet!")
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|DL_DB|DB_ADD|X_SB|SB_ADD|SUMS|O_ADH0|O_ADH17|ADH_ABH)
+            self.append_hex_to_cycle(4, ADD_ADL|ADL_ABL)
+            self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ZPGY:
-            raise NotImplementedError("Zero Page, Y-indexed addressing mode is not implemented yet!")
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|DL_DB|DB_ADD|Y_SB|SB_ADD|SUMS|O_ADH0|O_ADH17|ADH_ABH)
+            self.append_hex_to_cycle(4, ADD_ADL|ADL_ABL)
+            self.__first_cycle_after_addressing = 5
 
     def set_cycle(self, cycle: int, value: int):
         self.__cycles[cycle] = value
@@ -249,6 +255,12 @@ def main():
     ldy_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
 
+    # LDX immediate
+    ldx_imm = Instruction("LDX", 0xA2, AdressModesList.IMM)
+    ldx_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldx_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_X)
+    instructions.append(ldx_imm)
+
     # LDA zeropage
     lda_zpg = Instruction("LDA", 0xA5, AdressModesList.ZPG)
     lda_zpg.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
@@ -284,6 +296,12 @@ def main():
     sta_abs.append_hex_to_cycle_after_addressing(-1, AC_DB)
     sta_abs.append_hex_to_cycle_after_addressing(0, RW)
     instructions.append(sta_abs)
+
+    # STA zpg,X
+    sta_zpgx = Instruction("STA", 0x95, AdressModesList.ZPGX)
+    sta_zpgx.append_hex_to_cycle_after_addressing(-1, AC_DB)
+    sta_zpgx.append_hex_to_cycle_after_addressing(0, RW)
+    instructions.append(sta_zpgx)
 
     # STX absolute
     sty_abs = Instruction("STX", 0x8E, AdressModesList.ABS)
