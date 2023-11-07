@@ -4,10 +4,7 @@
 This module contains functions for encoding decoding instructions logic
 into binary format for a PLA (Programmable Logic Array).
 """
-from calendar import c
 from enum import Enum
-from sre_constants import ANY
-from tkinter import W
 import warnings
 from control_flags import *
 
@@ -251,7 +248,7 @@ class Instruction:
         cycle_with_reset = self.__cycles.copy()
         flag_list = list(set([ flag for _, flag, _ in self.__cycles ]))
         
-        if len(flag_list) > 2:
+        if len([ f for f in flag_list if f > 0 ]) > 2:
             print("WARNING: Instruction has more than 2 flags!")
             
         for flag in flag_list:

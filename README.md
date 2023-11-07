@@ -28,7 +28,9 @@ AC | Accumulator | An 8 bit register use for all arithmetic and logical operatio
 P | Processor Status | The register holds 7 flags that are update when doing operations and they can be set and clear. (Carry Flag, Zero Flag, Interrupt Disable, Decimal Mode, Break Command, Overflow Flag, Negative Flag)
 
 ### Flags
+
 There is 7 flags that are stored in the processor status.
+
 - Carry Flag: The carry flag is set if the last operation caused an overflow from bit 7 of the result or an underflow from bit 0. This condition is set during arithmetic, comparison and during logical shifts. It can be manually set or clear.
 - Zero Flag: The zero flag is set when the result of an operation was zero.
 - Interrupt Disable: This flag prevent interrupts to be trigger by external devices. It can be set or clear.
@@ -38,17 +40,22 @@ There is 7 flags that are stored in the processor status.
 - Negative Flag: The negative flag is set if the result of the last operation had bit 7 set to a one. So the number is negative if the bit is signed. 
 
 ### Intructions
+
 For now, this is all the instructions that are available on the CPU.
 OpCode | Instruction | Cycles
 -- | -- | --
 $00 | BRK imp | 12
 $a0 | LDY # | 5
+$a0 | LDY zpg | 6
+$a0 | LDY zpg,X | 7
+$a0 | LDY abs | 7
+$a0 | LDY abs,X | 7 +(1)
 $a2 | LDX # | 5
 $a5 | LDA zpg | 6
 $a9 | LDA # | 5
 $ad | LDA abs | 7
-$bd | LDA abs,X | 8
-$b9 | LDA abs,Y | 8
+$bd | LDA abs,X | 7 +(1)
+$b9 | LDA abs,Y | 7 +(1)
 $8d | STA abs | 6
 $95 | STA zpg,X | 6
 $8e | STX abs | 6
@@ -63,6 +70,7 @@ $98 | TYA imp | 4
 $a8 | TAY imp | 4
 
 ### Memory
+
 As the adress bus of the CPU is a 16-bits bus we can access 65537 space of 8-bits (1 byte) for a total memory of 65.537KB. The memory will be handle as follow:
 
 Addresses | Type | Total space
@@ -74,12 +82,16 @@ $7F00 - $7FFF | IO | 256B
 $8000 - $FFFF | ROM | 32,769B
 
 #### Vectors
+
 Vectors are memory adress that the CPU will load into its PC.
- - On a RESET, the CPU loads the vector from $FFFC/$FFFD into the program counter and continues fetching instructions from there.
- - On a BRK instruction, the CPU pushes the low byte and the high byte of the program counter as well as the processor status onto the stack (with bit #4 (B flag) sets), disables interrupts and loads the vector from $FFFE/$FFFF into the program counter and continues fetching instructions from there.
+
+- On a RESET, the CPU loads the vector from $FFFC/$FFFD into the program counter and continues fetching instructions from there.
+- On a BRK instruction, the CPU pushes the low byte and the high byte of the program counter as well as the processor status onto the stack (with bit #4 (B flag) sets), disables interrupts and loads the vector from $FFFE/$FFFF into the program counter and continues fetching instructions from there.
 
 ## Tools
+
 ### Simulation
+
 To simulate the behavior of our architecture we use [Logisim Evolution](https://github.com/logisim-evolution/logisim-evolution).
 
 Save all assembly file under the ```/asm/``` folder and then compile with ```.\vasm\vasm6502_oldstyle.exe -Fbin -dotdir -o .\bin\out.bin .\asm\file_name.s```
