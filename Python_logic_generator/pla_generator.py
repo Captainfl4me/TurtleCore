@@ -4,7 +4,9 @@
 This module contains functions for encoding decoding instructions logic
 into binary format for a PLA (Programmable Logic Array).
 """
+from calendar import c
 from enum import Enum
+from sre_constants import ANY
 from tkinter import W
 import warnings
 from control_flags import *
@@ -111,6 +113,7 @@ class InstructionName(Enum):
 
 
 class Flag(Enum):
+    ANY = -1
     NULL = 0
     C = 1
     Z = 2
@@ -173,16 +176,16 @@ class Instruction:
             self.append_hex_to_cycle(4, DL_ADH | ADH_ABH | ADD_ADL | ADL_ABL | PCL_PCL | PCH_PCH)
             self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ABSX:
-            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C)
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC, Flag.ANY)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C, Flag.ANY)
             self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
             self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
             self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
             self.__flag_inside_addressing = True
             self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ABSY:
-            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C)
+            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC, Flag.ANY)
+            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C, Flag.ANY)
             self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
             self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
             self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
@@ -226,10 +229,10 @@ class Instruction:
         if cycle <= 1:
             raise ValueError("Cycles 0 and 1 are reserved for fetch and decode instructions!")
 
-        if self.__flag != Flag.NULL and flag != Flag.NULL and flag != self.__flag:
+        if self.__flag.value > 0 and flag.value > 0 and flag != self.__flag:
             raise ValueError(f"Instruction {self.__name.value}({self.__opcode:02x}): flag {flag} is not the same as previous flag {self.__flag}!")
         
-        if flag != Flag.NULL and self.__flag == Flag.NULL:
+        if flag.value > 0 and self.__flag == Flag.NULL:
             self.__flag = flag
             
         max_cycle = max([ cycle for cycle, _, _ in self.__cycles ] if len(self.__cycles) > 0 else [0])
@@ -252,10 +255,12 @@ class Instruction:
             print("WARNING: Instruction has more than 2 flags!")
             
         for flag in flag_list:
+            if flag == Flag.ANY.value:
+                continue
+            
             max_cycle = max([ cycle for cycle,flag_f,_ in cycle_with_reset if flag == flag_f ])
             if self.__flag_inside_addressing is True and flag != Flag.NULL.value:
                 # If flag is inside addressing mode we need to copy all instruction cycles after addressing mode
-                print(cycle_with_reset) 
                 custom_cycles = [ (max_cycle + cycle - self.__first_cycle_after_addressing + 1, flag, value) for cycle, flag_f, value in self.__cycles if cycle >= self.__first_cycle_after_addressing and flag_f == Flag.NULL.value ]
                 cycle_with_reset += custom_cycles
                 max_cycle = max([ cycle for cycle,flag_f,_ in cycle_with_reset if flag == flag_f ])
@@ -270,7 +275,7 @@ class Instruction:
         instr_str = ""
         for cycle, flag, value in self.__cycles:
             flag_is_not_null = flag != Flag.NULL.value
-            instr_str += f"{Instruction.create_adress(self.opcode, cycle, flag_is_not_null):013b} {value:063b}\n"
+            instr_str += f"{Instruction.create_adress_str(self.opcode, cycle, int(flag_is_not_null) if flag >= 0 else -1)} {value:063b}\n"
 
         return instr_str
 
@@ -284,6 +289,10 @@ class Instruction:
     @staticmethod
     def create_adress(opcode, micro_counter, flag=0):
         return opcode << 5 | flag << 4 | micro_counter
+    
+    @staticmethod
+    def create_adress_str(opcode: int, micro_counter: int, flag: int = 0) -> str:
+        return f"{opcode:08b}{flag if flag >= 0 else 'x'}{micro_counter:04b}"        
 
     @staticmethod
     def create_opcode_from_abc(a, b, c):
@@ -311,12 +320,15 @@ def write_irq_pla() -> None:
 
 def write_decode_pla(instructions: list[Instruction]) -> None:
     file = open("./PLAs/DecodePLA.txt", "w", encoding="utf-8")
+    file_flag = open("./PLAs/DecodePLA_flagSelect.txt", "w", encoding="utf-8")
     # write first line of file
     file.write("# Logisim PLA program table\n")
+    file_flag.write("# Logisim PLA program table\n")
     file.write(f"xxxxxxxxx0000 {(ADH_ABH|ADL_ABL|I_PC|PCL_ADL|PCH_ADH):063b}\n")
     file.write(f"xxxxxxxxx0001 {(PCL_PCL|PCH_PCH):063b}\n")
     for instruction in instructions:
         file.write(instruction.get_decode_PLA())
+        file_flag.write(f"{instruction.opcode:08b} {instruction.flag.value:03b}\n")
     file.close()
 
 
