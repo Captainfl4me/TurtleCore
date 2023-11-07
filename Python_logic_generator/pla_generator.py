@@ -5,6 +5,7 @@ This module contains functions for encoding decoding instructions logic
 into binary format for a PLA (Programmable Logic Array).
 """
 from enum import Enum
+from tkinter import W
 import warnings
 from control_flags import *
 
@@ -131,7 +132,10 @@ class Instruction:
         self.__addressing_mode = addressing_mode
         self.__first_cycle_after_addressing = 0
         self.__cycles: list[tuple[int, int, int]] = [] # (cycle, flag, value)
+        self.__flag = Flag.NULL
+        self.__flag_inside_addressing = False
 
+        self.__has_been_validated = False
         self.__apply_addressing_mode()
 
     @property
@@ -153,6 +157,10 @@ class Instruction:
     @property
     def first_cycle_after_addressing(self) -> int:
         return self.__first_cycle_after_addressing
+    
+    @property
+    def flag(self) -> Flag:
+        return self.__flag
 
     def __apply_addressing_mode(self):
         if self.__addressing_mode == AdressModesList.A:
@@ -167,15 +175,19 @@ class Instruction:
         elif self.__addressing_mode == AdressModesList.ABSX:
             self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
             self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C)
-            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS)
-            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C)
-            self.__first_cycle_after_addressing = 6
+            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
+            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
+            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
+            self.__flag_inside_addressing = True
+            self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ABSY:
             self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
             self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C)
-            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS)
-            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C)
-            self.__first_cycle_after_addressing = 6
+            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
+            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
+            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
+            self.__flag_inside_addressing = True
+            self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.IMM:
             self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
@@ -214,6 +226,12 @@ class Instruction:
         if cycle <= 1:
             raise ValueError("Cycles 0 and 1 are reserved for fetch and decode instructions!")
 
+        if self.__flag != Flag.NULL and flag != Flag.NULL and flag != self.__flag:
+            raise ValueError(f"Instruction {self.__name.value}({self.__opcode:02x}): flag {flag} is not the same as previous flag {self.__flag}!")
+        
+        if flag != Flag.NULL and self.__flag == Flag.NULL:
+            self.__flag = flag
+            
         max_cycle = max([ cycle for cycle, _, _ in self.__cycles ] if len(self.__cycles) > 0 else [0])
         if cycle > max_cycle+1 and cycle > 2:
             warnings.warn(f"Instruction {self.__name.value}({self.__opcode:02x}): cycle {cycle} create a gap between micro cycle (last cycle: {max_cycle})!", RuntimeWarning)
@@ -222,27 +240,46 @@ class Instruction:
     def append_hex_to_cycle_after_addressing(self, relative_cycle: int, value: int):
         self.append_hex_to_cycle(self.__first_cycle_after_addressing + relative_cycle, value)
 
-    def get_decode_PLA(self) -> str:
-        instr_str = ""
+    def validate_instruction(self):
         if len(self.__cycles) == 0:
             raise ValueError(f"Instruction has no cycles: {self.__name.value}({self.__opcode:02x})!")
 
         # add reset cycle if instruction has less than 16 cycles
         cycle_with_reset = self.__cycles.copy()
-        flag_list = [ flag for _, flag, _ in self.__cycles ]
+        flag_list = list(set([ flag for _, flag, _ in self.__cycles ]))
+        
+        if len(flag_list) > 2:
+            print("WARNING: Instruction has more than 2 flags!")
+            
         for flag in flag_list:
             max_cycle = max([ cycle for cycle,flag_f,_ in cycle_with_reset if flag == flag_f ])
+            if self.__flag_inside_addressing is True and flag != Flag.NULL.value:
+                # If flag is inside addressing mode we need to copy all instruction cycles after addressing mode
+                print(cycle_with_reset) 
+                custom_cycles = [ (max_cycle + cycle - self.__first_cycle_after_addressing + 1, flag, value) for cycle, flag_f, value in self.__cycles if cycle >= self.__first_cycle_after_addressing and flag_f == Flag.NULL.value ]
+                cycle_with_reset += custom_cycles
+                max_cycle = max([ cycle for cycle,flag_f,_ in cycle_with_reset if flag == flag_f ])
             if max_cycle < 16:
-                cycle_with_reset.append((16, flag, RST_CYCLE))
+                cycle_with_reset.append((max_cycle+1, flag, RST_CYCLE))
+        self.__cycles = cycle_with_reset
+        self.__has_been_validated = True
 
-        for cycle, flag, value in cycle_with_reset:
+    def get_decode_PLA(self) -> str:
+        if self.__has_been_validated is False:
+            self.validate_instruction()
+        instr_str = ""
+        for cycle, flag, value in self.__cycles:
             flag_is_not_null = flag != Flag.NULL.value
             instr_str += f"{Instruction.create_adress(self.opcode, cycle, flag_is_not_null):013b} {value:063b}\n"
 
         return instr_str
 
-    def get_std_cycle_len(self) -> int:
-        return len([ cycle for cycle, flag, _ in self.__cycles if flag == Flag.NULL.value ])
+    def get_last_cycle_of_instruction(self, flag: Flag = Flag.NULL) -> int:
+        cycles_with_flags = [ cycle for cycle, flag_f, _ in self.__cycles if flag.value == flag_f ]
+        if len(cycles_with_flags) == 0:
+            return 0
+        else:
+            return max(cycles_with_flags)
 
     @staticmethod
     def create_adress(opcode, micro_counter, flag=0):
@@ -259,7 +296,9 @@ def generate_instruction_docs(instructions: list[Instruction]) -> str:
     """
     return_string = "OpCode | Instruction | Cycles\n-- | -- | --\n"
     for instruction in instructions:
-        return_string += f"${instruction.opcode:02x} | {instruction.name} {instruction.addressing_mode.value.short_name} | {instruction.get_std_cycle_len()}\n"
+        last_cycle = instruction.get_last_cycle_of_instruction()
+        last_cycle_with_flag = instruction.get_last_cycle_of_instruction(instruction.flag)
+        return_string += f"${instruction.opcode:02x} | {instruction.name.value} {instruction.addressing_mode.value.short_name} | {last_cycle}{'' if last_cycle_with_flag - last_cycle <= 0 else ' +('+str(last_cycle_with_flag - last_cycle)+')' }\n"
     return return_string
 
 
@@ -329,6 +368,30 @@ def main():
     ldy_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
 
+    # LDY zeropage
+    ldy_zpg = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ZPG)
+    ldy_zpg.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_zpg.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    instructions.append(ldy_zpg)
+
+    # LDY zeropage,X
+    ldy_zpgx = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ZPGX)
+    ldy_zpgx.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_zpgx.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    instructions.append(ldy_zpgx)
+
+    # LDY absolute
+    ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ABS)
+    ldy_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    instructions.append(ldy_imm)
+
+    # LDY absolute,X
+    ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ABSX)
+    ldy_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    instructions.append(ldy_imm)
+    
     # LDX immediate
     ldx_imm = Instruction(InstructionName.LDX, 0xA2, AdressModesList.IMM)
     ldx_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
@@ -427,6 +490,9 @@ def main():
     tay_impl = Instruction(InstructionName.TAY, 0xA8, AdressModesList.IMP)
     tay_impl.append_hex_to_cycle_after_addressing(0, AC_SB | SB_Y | SB_DB | DBZ_Z | DB7_N)
     instructions.append(tay_impl)
+
+    for instruction in instructions:
+        instruction.validate_instruction()
 
     print("------ DOC INSTRCUTION TABLE -------")
     print(generate_instruction_docs(instructions))
