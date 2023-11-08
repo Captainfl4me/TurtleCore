@@ -1597,7 +1597,8 @@ xxxxxxxxx0001 000000000000000000000000000000000000000000000000001000010000000
       <a name="facing" val="south"/>
       <a name="select" val="4"/>
     </comp>
-    <comp lib="2" loc="(530,930)" name="Demultiplexer">
+    <comp lib="2" loc="(530,930)" name="Multiplexer">
+      <a name="facing" val="west"/>
       <a name="select" val="3"/>
     </comp>
     <comp lib="2" loc="(790,750)" name="Decoder">
