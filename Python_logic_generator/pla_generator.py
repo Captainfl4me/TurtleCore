@@ -406,25 +406,25 @@ def main():
     instructions.append(ldy_imm)
 
     # LDY zeropage
-    ldy_zpg = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ZPG)
+    ldy_zpg = Instruction(InstructionName.LDY, 0xA4, AdressModesList.ZPG)
     ldy_zpg.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     ldy_zpg.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_zpg)
 
     # LDY zeropage,X
-    ldy_zpgx = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ZPGX)
+    ldy_zpgx = Instruction(InstructionName.LDY, 0xB4, AdressModesList.ZPGX)
     ldy_zpgx.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     ldy_zpgx.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_zpgx)
 
     # LDY absolute
-    ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ABS)
+    ldy_imm = Instruction(InstructionName.LDY, 0xAC, AdressModesList.ABS)
     ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
 
     # LDY absolute,X
-    ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ABSX)
+    ldy_imm = Instruction(InstructionName.LDY, 0xBC, AdressModesList.ABSX)
     ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
