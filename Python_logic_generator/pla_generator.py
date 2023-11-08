@@ -169,7 +169,7 @@ class Instruction:
         if self.__addressing_mode == AdressModesList.A:
             self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.set_cycle(3, PCL_PCL | PCH_PCH)
-            self.__first_cycle_after_addressing = 4
+            self.__first_cycle_after_addressing = 3
         elif self.__addressing_mode == AdressModesList.ABS:
             self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.set_cycle(3, DL_DB | DB_ADD | O_ADD | PCL_PCL | PCH_PCH | PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | SUMS | I_PC)
@@ -194,11 +194,11 @@ class Instruction:
         elif self.__addressing_mode == AdressModesList.IMM:
             self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.set_cycle(3, PCL_PCL | PCH_PCH)
-            self.__first_cycle_after_addressing = 4
+            self.__first_cycle_after_addressing = 3
         elif self.__addressing_mode == AdressModesList.IMP:
             self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.set_cycle(3, PCL_PCL | PCH_PCH)
-            self.__first_cycle_after_addressing = 4
+            self.__first_cycle_after_addressing = 3
         elif self.__addressing_mode == AdressModesList.IND:
             raise NotImplementedError("Indirect addressing mode is not implemented yet!")
         elif self.__addressing_mode == AdressModesList.XIND:
@@ -432,28 +432,28 @@ def main():
     instructions.append(ldx_imm)
     # LDX zeropage
     ldx_zpg = ldx_imm.copyInstruction(0xA6, AdressModesList.ZPG)
-    # instructions.append(ldx_zpg)
+    instructions.append(ldx_zpg)
     # LDX zeropage,Y
     ldx_zpgy = ldx_imm.copyInstruction(0xB6, AdressModesList.ZPGY)
-    # instructions.append(ldx_zpgy)
+    instructions.append(ldx_zpgy)
     # LDX absolute
     ldx_abs = ldx_imm.copyInstruction(0xAE, AdressModesList.ABS)
-    # instructions.append(ldx_abs)
+    instructions.append(ldx_abs)
     # LDX absolute,Y
     ldx_absy = ldx_imm.copyInstruction(0xBE, AdressModesList.ABSY)
-    # instructions.append(ldx_absy)
+    instructions.append(ldx_absy)
 
     # LDA immediate
     lda_imm = Instruction(InstructionName.LDA, 0xA9, AdressModesList.IMM)
     lda_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     lda_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    instructions.append(lda_imm)
     # LDA zeropage
     lda_zpg = lda_imm.copyInstruction(0xA5, AdressModesList.ZPG)
     instructions.append(lda_zpg)
-    instructions.append(lda_imm)
     # LDA zeropage,X
     lda_zpgx = lda_imm.copyInstruction(0xB5, AdressModesList.ZPGX)
-    # instructions.append(lda_zpgx)
+    instructions.append(lda_zpgx)
     # LDA absolute
     lda_abs = lda_imm.copyInstruction(0xAD, AdressModesList.ABS)
     instructions.append(lda_abs)

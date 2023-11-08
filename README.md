@@ -46,13 +46,18 @@ OpCode | Instruction | Cycles
 -- | -- | --
 $00 | BRK imp | 12
 $a0 | LDY # | 5
-$a0 | LDY zpg | 6
-$a0 | LDY zpg,X | 7
-$a0 | LDY abs | 7
-$a0 | LDY abs,X | 7 +(1)
+$a4 | LDY zpg | 6
+$b4 | LDY zpg,X | 7
+$ac | LDY abs | 7
+$bc | LDY abs,X | 7 +(1)
 $a2 | LDX # | 5
-$a5 | LDA zpg | 6
+$a6 | LDX zpg | 6
+$b6 | LDX zpg,Y | 7
+$ae | LDX abs | 7
+$be | LDX abs,Y | 7 +(1)
 $a9 | LDA # | 5
+$a5 | LDA zpg | 6
+$b5 | LDA zpg,X | 7
 $ad | LDA abs | 7
 $bd | LDA abs,X | 7 +(1)
 $b9 | LDA abs,Y | 7 +(1)
