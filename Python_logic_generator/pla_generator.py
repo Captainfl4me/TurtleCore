@@ -5,6 +5,7 @@ This module contains functions for encoding decoding instructions logic
 into binary format for a PLA (Programmable Logic Array).
 """
 from enum import Enum
+from numpy import vsplit
 import pandas as pd
 from functools import reduce
 import warnings
@@ -393,6 +394,7 @@ def write_vectors_pla() -> None:
 def main():
     instructions: list[Instruction] = []
 
+    ######################################### BRK #########################################
     # BRK impl
     brk = Instruction(InstructionName.BRK, 0x00, AdressModesList.IMP)
     brk.set_cycle(2, DBx_ADD | O_ADD | I_ADDC | SUMS | S_ADL | ADL_ABL, overwrite=True)
@@ -407,6 +409,7 @@ def main():
     brk.set_cycle(11, DL_ADH | ADH_PCH)
     instructions.append(brk)
 
+    ######################################### LDY #########################################
     # LDY immediate
     ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.IMM)
     ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
@@ -425,6 +428,7 @@ def main():
     ldy_absx = ldy_imm.copyInstruction(0xBC , AdressModesList.ABSX)
     instructions.append(ldy_absx)
     
+    ######################################### LDX #########################################
     # LDX immediate
     ldx_imm = Instruction(InstructionName.LDX, 0xA2, AdressModesList.IMM)
     ldx_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
@@ -443,6 +447,7 @@ def main():
     ldx_absy = ldx_imm.copyInstruction(0xBE, AdressModesList.ABSY)
     instructions.append(ldx_absy)
 
+    ######################################### LDA #########################################
     # LDA immediate
     lda_imm = Instruction(InstructionName.LDA, 0xA9, AdressModesList.IMM)
     lda_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
@@ -464,68 +469,86 @@ def main():
     lda_absy = lda_imm.copyInstruction(0xB9, AdressModesList.ABSY)
     instructions.append(lda_absy)
 
-    # STA absolute
-    sta_abs = Instruction(InstructionName.STA, 0x8D, AdressModesList.ABS)
-    sta_abs.set_cycle_after_adressing(-1, AC_DB)
-    sta_abs.set_cycle_after_adressing(0, RW)
-    instructions.append(sta_abs)
-
-    # STA zpg,X
-    sta_zpgx = Instruction(InstructionName.STA, 0x95, AdressModesList.ZPGX)
-    sta_zpgx.set_cycle_after_adressing(-1, AC_DB)
-    sta_zpgx.set_cycle_after_adressing(0, RW)
+    ######################################### STA #########################################
+    # STA zeropage
+    sta_zpg = Instruction(InstructionName.STA, 0x85, AdressModesList.ZPG)
+    sta_zpg.set_cycle_after_adressing(-1, AC_DB)
+    sta_zpg.set_cycle_after_adressing(0, RW)
+    instructions.append(sta_zpg)
+    # STA zeropage,X
+    sta_zpgx = sta_zpg.copyInstruction(0x95, AdressModesList.ZPGX)
     instructions.append(sta_zpgx)
-
-    # STX absolute
-    sty_abs = Instruction(InstructionName.STX, 0x8E, AdressModesList.ABS)
-    sty_abs.set_cycle_after_adressing(-1, X_SB|SB_DB)
-    sty_abs.set_cycle_after_adressing(0, RW)
-    instructions.append(sty_abs)
-
+    # STA absolute
+    sta_abs = sta_zpg.copyInstruction(0x8D, AdressModesList.ABS)
+    instructions.append(sta_abs)
+    # STA absolute,X
+    sta_absx = sta_zpg.copyInstruction(0x9D, AdressModesList.ABSX)
+    instructions.append(sta_absx)
+    # STA absolute,Y
+    sta_absy = sta_zpg.copyInstruction(0x99, AdressModesList.ABSY)
+    instructions.append(sta_absy)
+    
+    ######################################### STX #########################################
     # STX zeropage
-    sty_zpg = Instruction(InstructionName.STX, 0x86, AdressModesList.ZPG)
-    sty_zpg.set_cycle_after_adressing(-1, X_SB|SB_DB)
-    sty_zpg.set_cycle_after_adressing(0, RW)
-    instructions.append(sty_zpg)
+    stx_zpg = Instruction(InstructionName.STX, 0x86, AdressModesList.ZPG)
+    stx_zpg.set_cycle_after_adressing(-1, X_SB|SB_DB)
+    stx_zpg.set_cycle_after_adressing(0, RW)
+    instructions.append(stx_zpg)
+    # STX zeropage,Y
+    stx_zpgy = stx_zpg.copyInstruction(0x96, AdressModesList.ZPGY)
+    instructions.append(stx_zpgy)
+    # STX absolute
+    stx_abs = stx_zpg.copyInstruction(0x8E, AdressModesList.ABS)
+    instructions.append(stx_abs)
 
-    # STY absolute
-    sty_abs = Instruction(InstructionName.STY, 0x8C, AdressModesList.ABS)
-    sty_abs.set_cycle_after_adressing(-1, Y_SB|SB_DB)
-    sty_abs.set_cycle_after_adressing(0, RW)
-    instructions.append(sty_abs)
-
+    ######################################### STY #########################################
     # STY zeropage
     sty_zpg = Instruction(InstructionName.STY, 0x84, AdressModesList.ZPG)
     sty_zpg.set_cycle_after_adressing(-1, Y_SB|SB_DB)
     sty_zpg.set_cycle_after_adressing(0, RW)
     instructions.append(sty_zpg)
+    # STY zeropage,X
+    sty_zpgx = sty_zpg.copyInstruction(0x94, AdressModesList.ZPGX)
+    instructions.append(sty_zpgx)
+    # STY absolute
+    sty_abs = sty_zpg.copyInstruction(0x8C, AdressModesList.ABS)
+    instructions.append(sty_abs)
 
-    # TSX impl
-    tsx_impl = Instruction(InstructionName.TSX, 0xBA, AdressModesList.IMP)
-    tsx_impl.set_cycle_after_adressing(0, X_SB | SB_S | SB_DB | DBZ_Z | DB7_N)
-    instructions.append(tsx_impl)
-    # TXS impl
-    txs_impl = Instruction(InstructionName.TXS, 0x9A, AdressModesList.IMP)
-    txs_impl.set_cycle_after_adressing(0, X_SB | SB_S)
-    instructions.append(txs_impl)
-
-    # TXA impl
-    txa_impl = Instruction(InstructionName.TXA, 0x8A, AdressModesList.IMP)
-    txa_impl.set_cycle_after_adressing(0, X_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
-    instructions.append(txa_impl)
+    ######################################### TAX #########################################
     # TAX impl
     tax_impl = Instruction(InstructionName.TAX, 0xAA, AdressModesList.IMP)
     tax_impl.set_cycle_after_adressing(0, AC_SB | SB_X | SB_DB | DBZ_Z | DB7_N)
     instructions.append(tax_impl)
 
-    # TYA impl
-    tya_impl = Instruction(InstructionName.TYA, 0x98, AdressModesList.IMP)
-    tya_impl.set_cycle_after_adressing(0, Y_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
-    instructions.append(tya_impl)
+    ######################################### TAY #########################################
     # TAY impl
     tay_impl = Instruction(InstructionName.TAY, 0xA8, AdressModesList.IMP)
     tay_impl.set_cycle_after_adressing(0, AC_SB | SB_Y | SB_DB | DBZ_Z | DB7_N)
     instructions.append(tay_impl)
+
+    ######################################### TSX #########################################
+    # TSX impl
+    tsx_impl = Instruction(InstructionName.TSX, 0xBA, AdressModesList.IMP)
+    tsx_impl.set_cycle_after_adressing(0, X_SB | SB_S | SB_DB | DBZ_Z | DB7_N)
+    instructions.append(tsx_impl)
+
+    ######################################### TXA #########################################
+    # TXA impl
+    txa_impl = Instruction(InstructionName.TXA, 0x8A, AdressModesList.IMP)
+    txa_impl.set_cycle_after_adressing(0, X_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
+    instructions.append(txa_impl)
+    
+    ######################################### TXS #########################################
+    # TXS impl
+    txs_impl = Instruction(InstructionName.TXS, 0x9A, AdressModesList.IMP)
+    txs_impl.set_cycle_after_adressing(0, X_SB | SB_S)
+    instructions.append(txs_impl)
+    
+    ######################################### TYA ######################################### 
+    # TYA impl
+    tya_impl = Instruction(InstructionName.TYA, 0x98, AdressModesList.IMP)
+    tya_impl.set_cycle_after_adressing(0, Y_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
+    instructions.append(tya_impl)
 
     for instruction in instructions:
         instruction.validate_instruction()

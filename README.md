@@ -61,18 +61,23 @@ $b5 | LDA zpg,X | 7
 $ad | LDA abs | 7
 $bd | LDA abs,X | 7 +(1)
 $b9 | LDA abs,Y | 7 +(1)
-$8d | STA abs | 6
+$85 | STA zpg | 5
 $95 | STA zpg,X | 6
-$8e | STX abs | 6
+$8d | STA abs | 6
+$9d | STA abs,X | 6 +(1)
+$99 | STA abs,Y | 6 +(1)
 $86 | STX zpg | 5
-$8c | STY abs | 6
+$96 | STX zpg,Y | 6
+$8e | STX abs | 6
 $84 | STY zpg | 5
-$ba | TSX imp | 4
-$9a | TXS imp | 4
-$8a | TXA imp | 4
+$94 | STY zpg,X | 6
+$8c | STY abs | 6
 $aa | TAX imp | 4
-$98 | TYA imp | 4
 $a8 | TAY imp | 4
+$ba | TSX imp | 4
+$8a | TXA imp | 4
+$9a | TXS imp | 4
+$98 | TYA imp | 4
 
 ### Memory
 
