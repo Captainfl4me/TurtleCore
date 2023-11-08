@@ -469,6 +469,25 @@ def main():
     lda_absy = lda_imm.copyInstruction(0xB9, AdressModesList.ABSY)
     instructions.append(lda_absy)
 
+    ######################################### SEC #########################################
+    # SEC impl
+    sec_impl = Instruction(InstructionName.SEC, 0x38, AdressModesList.IMP)
+    sec_impl.set_cycle_after_adressing(-1, IR5_C)
+    instructions.append(sec_impl)
+
+    ######################################### SED ########################################:w
+    # #
+    # SED impl
+    sed_impl = Instruction(InstructionName.SED, 0xF8, AdressModesList.IMP)
+    sed_impl.set_cycle_after_adressing(-1, IR5_D)
+    instructions.append(sed_impl)
+
+    ######################################### SEI #########################################
+    # SEI impl
+    sei_impl = Instruction(InstructionName.SEI, 0x78, AdressModesList.IMP)
+    sei_impl.set_cycle_after_adressing(-1, IR5_I)
+    instructions.append(sei_impl)
+
     ######################################### STA #########################################
     # STA zeropage
     sta_zpg = Instruction(InstructionName.STA, 0x85, AdressModesList.ZPG)

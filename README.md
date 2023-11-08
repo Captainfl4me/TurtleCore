@@ -61,6 +61,9 @@ $b5 | LDA zpg,X | 7
 $ad | LDA abs | 7
 $bd | LDA abs,X | 7 +(1)
 $b9 | LDA abs,Y | 7 +(1)
+$38 | SEC imp | 4
+$f8 | SED imp | 4
+$78 | SEI imp | 4
 $85 | STA zpg | 5
 $95 | STA zpg,X | 6
 $8d | STA abs | 6
