@@ -5,6 +5,8 @@ This module contains functions for encoding decoding instructions logic
 into binary format for a PLA (Programmable Logic Array).
 """
 from enum import Enum
+import pandas as pd
+from functools import reduce
 import warnings
 from control_flags import *
 
@@ -219,6 +221,12 @@ class Instruction:
             self.append_hex_to_cycle(4, ADD_ADL|ADL_ABL)
             self.__first_cycle_after_addressing = 5
 
+    def set_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL):
+        for i, (cycle_f, flag_f, _) in enumerate(self.__cycles):
+            if cycle_f == cycle and flag_f == flag.value:
+                self.__cycles[i] = (cycle, flag.value, value)
+                return
+    
     def new_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL):
         self.__cycles.append((cycle, flag.value, value))
 
@@ -249,11 +257,25 @@ class Instruction:
         flag_list = list(set([ flag for _, flag, _ in self.__cycles ]))
         
         if len([ f for f in flag_list if f > 0 ]) > 2:
-            print("WARNING: Instruction has more than 2 flags!")
+            print(f"WARNING: Instruction has more than 2 flags! {self}")
             
         for flag in flag_list:
             if flag == Flag.ANY.value:
                 continue
+            
+            cycles_list =pd.Series([ cycle for cycle, flag_f, _ in cycle_with_reset if flag == flag_f ])
+            duplicated_cycles = cycles_list.duplicated()
+            # Check for duplicated cycles and merge them
+            if duplicated_cycles.any() == True:
+                for dup_cycle in cycles_list[duplicated_cycles]:
+                    values_to_merge = [ value for cycle, flag_f, value in cycle_with_reset if cycle == dup_cycle and flag_f == flag ]
+                    new_value = reduce(lambda x, y: x | y, values_to_merge)
+                    new_cycle = (dup_cycle, flag, new_value)
+                    # Remove old cycles and insert new one
+                    cycle_with_reset = [ cycle for cycle in cycle_with_reset if cycle[0] != dup_cycle or cycle[1] != flag ]
+                    cycle_with_reset.append(new_cycle)
+                    # Sort cycles tuple by cycle number
+                    cycle_with_reset = sorted(cycle_with_reset, key=lambda x: x[0])
             
             max_cycle = max([ cycle for cycle,flag_f,_ in cycle_with_reset if flag == flag_f ])
             if self.__flag_inside_addressing is True and flag != Flag.NULL.value:
@@ -282,6 +304,9 @@ class Instruction:
             return 0
         else:
             return max(cycles_with_flags)
+
+    def __repr__(self) -> str:
+        return f"Instruction({self.__name.value}, {self.__opcode:02x}, {self.__addressing_mode})"
 
     @staticmethod
     def create_adress(opcode, micro_counter, flag=0):
@@ -359,8 +384,8 @@ def main():
 
     # BRK impl
     brk = Instruction(InstructionName.BRK, 0x00, AdressModesList.IMP)
-    brk.new_cycle(2, DBx_ADD | O_ADD | I_ADDC | SUMS | S_ADL | ADL_ABL)
-    brk.new_cycle(3, ADD_SB06 | ADD_SB7 | SB_ADH | ADH_ABH | PCH_DB)
+    brk.set_cycle(2, DBx_ADD | O_ADD | I_ADDC | SUMS | S_ADL | ADL_ABL)
+    brk.set_cycle(3, ADD_SB06 | ADD_SB7 | SB_ADH | ADH_ABH | PCH_DB)
     brk.append_hex_to_cycle(4, RW | DB_ADD | S_SB | SB_ADD | SUMS)
     brk.append_hex_to_cycle(5, ADD_SB06 | ADD_SB7 | SB_S | ADD_ADL | ADL_ABL | PCL_DB)
     brk.append_hex_to_cycle(6, RW | DB_ADD | S_SB | SB_ADD | SUMS)
