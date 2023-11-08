@@ -394,6 +394,28 @@ def write_vectors_pla() -> None:
 def main():
     instructions: list[Instruction] = []
 
+    ######################################### ADC #########################################
+    # ADC immediate
+    adc_imm = Instruction(InstructionName.ADC, 0x69, AdressModesList.IMM)
+    adc_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | AC_SB | SB_ADD | SUMS | ACR_C | AVR_V) # | DBZ_Z | DB7_N)
+    adc_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC | SB_DB | DBZ_Z | DB7_N)
+    instructions.append(adc_imm)
+    # ADC zeropage
+    adc_zpg = adc_imm.copyInstruction(0x65, AdressModesList.ZPG)
+    instructions.append(adc_zpg)
+    # ADC zeropage,X
+    adc_zpgx = adc_imm.copyInstruction(0x75, AdressModesList.ZPGX)
+    instructions.append(adc_zpgx)
+    # ADC absolute
+    adc_abs = adc_imm.copyInstruction(0x6D, AdressModesList.ABS)
+    instructions.append(adc_abs)
+    # ADC absolute,X
+    adc_absx = adc_imm.copyInstruction(0x7D, AdressModesList.ABSX)
+    instructions.append(adc_absx)
+    # ADC absolute,Y
+    adc_absy = adc_imm.copyInstruction(0x79, AdressModesList.ABSY)
+    instructions.append(adc_absy)
+
     ######################################### BRK #########################################
     # BRK impl
     brk = Instruction(InstructionName.BRK, 0x00, AdressModesList.IMP)

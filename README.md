@@ -44,6 +44,12 @@ There is 7 flags that are stored in the processor status.
 For now, this is all the instructions that are available on the CPU.
 OpCode | Instruction | Cycles
 -- | -- | --
+$69 | ADC # | 5
+$65 | ADC zpg | 6
+$75 | ADC zpg,X | 7
+$6d | ADC abs | 7
+$7d | ADC abs,X | 7 +(1)
+$79 | ADC abs,Y | 7 +(1)
 $00 | BRK imp | 12
 $a0 | LDY # | 5
 $a4 | LDY zpg | 6
