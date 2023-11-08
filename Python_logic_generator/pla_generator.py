@@ -166,37 +166,37 @@ class Instruction:
 
     def __apply_addressing_mode(self):
         if self.__addressing_mode == AdressModesList.A:
-            self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
+            self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
+            self.set_cycle(3, PCL_PCL | PCH_PCH)
             self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.ABS:
-            self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
-            self.append_hex_to_cycle(3, DL_DB | DB_ADD | O_ADD | PCL_PCL | PCH_PCH | PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | SUMS | I_PC)
-            self.append_hex_to_cycle(4, DL_ADH | ADH_ABH | ADD_ADL | ADL_ABL | PCL_PCL | PCH_PCH)
+            self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
+            self.set_cycle(3, DL_DB | DB_ADD | O_ADD | PCL_PCL | PCH_PCH | PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | SUMS | I_PC)
+            self.set_cycle(4, DL_ADH | ADH_ABH | ADD_ADL | ADL_ABL | PCL_PCL | PCH_PCH)
             self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ABSX:
-            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC, Flag.ANY)
-            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C, Flag.ANY)
-            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
-            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
-            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
+            self.set_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC, Flag.ANY)
+            self.set_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|X_SB|SUMS|ACR_C, Flag.ANY)
+            self.set_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
+            self.set_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
+            self.set_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
             self.__flag_inside_addressing = True
             self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ABSY:
-            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC, Flag.ANY)
-            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C, Flag.ANY)
-            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
-            self.append_hex_to_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
-            self.append_hex_to_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
+            self.set_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC, Flag.ANY)
+            self.set_cycle(3, PCL_PCL|PCH_PCH|PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC|DL_DB|DB_ADD|SB_ADD|Y_SB|SUMS|ACR_C, Flag.ANY)
+            self.set_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_ADH|ADH_ABH, Flag.NULL)
+            self.set_cycle(4, PCL_PCL|PCH_PCH|ADD_ADL|ADL_ABL|DL_DB|DB_ADD|O_ADD|SUMS, Flag.C)
+            self.set_cycle(5, ADD_SB06|ADD_SB7|SB_ADH|ADH_ABH|DB0_C, Flag.C)
             self.__flag_inside_addressing = True
             self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.IMM:
-            self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
+            self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
+            self.set_cycle(3, PCL_PCL | PCH_PCH)
             self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.IMP:
-            self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
+            self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
+            self.set_cycle(3, PCL_PCL | PCH_PCH)
             self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.IND:
             raise NotImplementedError("Indirect addressing mode is not implemented yet!")
@@ -207,36 +207,33 @@ class Instruction:
         elif self.__addressing_mode == AdressModesList.REL:
             raise NotImplementedError("Relative addressing mode is not implemented yet!")
         elif self.__addressing_mode == AdressModesList.ZPG:
-            self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH | DL_ADL | ADL_ABL | O_ADH0 | O_ADH17 | ADH_ABH)
+            self.set_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
+            self.set_cycle(3, PCL_PCL | PCH_PCH | DL_ADL | ADL_ABL | O_ADH0 | O_ADH17 | ADH_ABH)
             self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.ZPGX:
-            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|DL_DB|DB_ADD|X_SB|SB_ADD|SUMS|O_ADH0|O_ADH17|ADH_ABH)
-            self.append_hex_to_cycle(4, ADD_ADL|ADL_ABL)
+            self.set_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.set_cycle(3, PCL_PCL|PCH_PCH|DL_DB|DB_ADD|X_SB|SB_ADD|SUMS|O_ADH0|O_ADH17|ADH_ABH)
+            self.set_cycle(4, ADD_ADL|ADL_ABL)
             self.__first_cycle_after_addressing = 5
         elif self.__addressing_mode == AdressModesList.ZPGY:
-            self.append_hex_to_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
-            self.append_hex_to_cycle(3, PCL_PCL|PCH_PCH|DL_DB|DB_ADD|Y_SB|SB_ADD|SUMS|O_ADH0|O_ADH17|ADH_ABH)
-            self.append_hex_to_cycle(4, ADD_ADL|ADL_ABL)
+            self.set_cycle(2, PCL_ADL|PCH_ADH|ADL_ABL|ADH_ABH|I_PC)
+            self.set_cycle(3, PCL_PCL|PCH_PCH|DL_DB|DB_ADD|Y_SB|SB_ADD|SUMS|O_ADH0|O_ADH17|ADH_ABH)
+            self.set_cycle(4, ADD_ADL|ADL_ABL)
             self.__first_cycle_after_addressing = 5
 
-    def set_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL):
-        for i, (cycle_f, flag_f, _) in enumerate(self.__cycles):
-            if cycle_f == cycle and flag_f == flag.value:
-                self.__cycles[i] = (cycle, flag.value, value)
-                return
-    
-    def new_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL):
-        self.__cycles.append((cycle, flag.value, value))
-
-    def append_hex_to_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL):
-        if cycle <= 1:
-            raise ValueError("Cycles 0 and 1 are reserved for fetch and decode instructions!")
-
+    def set_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL, overwrite: bool = False):
         if self.__flag.value > 0 and flag.value > 0 and flag != self.__flag:
             raise ValueError(f"Instruction {self.__name.value}({self.__opcode:02x}): flag {flag} is not the same as previous flag {self.__flag}!")
         
+        for i, (cycle_f, flag_f, _) in enumerate(self.__cycles):
+            if cycle_f == cycle and flag_f == flag.value:
+                if overwrite is True:
+                    self.__cycles[i] = (cycle, flag.value, value)
+                else:
+                    self.__cycles[i] = (cycle, flag.value, value | self.__cycles[i][2])
+                return
+        
+        # If cycle is not found, add it
         if flag.value > 0 and self.__flag == Flag.NULL:
             self.__flag = flag
             
@@ -245,8 +242,11 @@ class Instruction:
             warnings.warn(f"Instruction {self.__name.value}({self.__opcode:02x}): cycle {cycle} create a gap between micro cycle (last cycle: {max_cycle})!", RuntimeWarning)
         self.__cycles.append((cycle, flag.value, value))
 
-    def append_hex_to_cycle_after_addressing(self, relative_cycle: int, value: int):
-        self.append_hex_to_cycle(self.__first_cycle_after_addressing + relative_cycle, value)
+    def new_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL):
+        self.__cycles.append((cycle, flag.value, value))
+
+    def set_cycle_after_adressing(self, relative_cycle: int, value: int):
+        self.set_cycle(self.__first_cycle_after_addressing + relative_cycle, value)
 
     def validate_instruction(self):
         if len(self.__cycles) == 0:
@@ -267,6 +267,7 @@ class Instruction:
             duplicated_cycles = cycles_list.duplicated()
             # Check for duplicated cycles and merge them
             if duplicated_cycles.any() == True:
+                print(f"WARNING: Instruction {self.__name.value}({self.__opcode:02x}) has duplicated cycles for flag {flag}!")
                 for dup_cycle in cycles_list[duplicated_cycles]:
                     values_to_merge = [ value for cycle, flag_f, value in cycle_with_reset if cycle == dup_cycle and flag_f == flag ]
                     new_value = reduce(lambda x, y: x | y, values_to_merge)
@@ -275,7 +276,9 @@ class Instruction:
                     cycle_with_reset = [ cycle for cycle in cycle_with_reset if cycle[0] != dup_cycle or cycle[1] != flag ]
                     cycle_with_reset.append(new_cycle)
                     # Sort cycles tuple by cycle number
-                    cycle_with_reset = sorted(cycle_with_reset, key=lambda x: x[0])
+            
+            # Sort cycles tuple by cycle number
+            cycle_with_reset = sorted(cycle_with_reset, key=lambda x: x[0])
             
             max_cycle = max([ cycle for cycle,flag_f,_ in cycle_with_reset if flag == flag_f ])
             if self.__flag_inside_addressing is True and flag != Flag.NULL.value:
@@ -384,145 +387,145 @@ def main():
 
     # BRK impl
     brk = Instruction(InstructionName.BRK, 0x00, AdressModesList.IMP)
-    brk.set_cycle(2, DBx_ADD | O_ADD | I_ADDC | SUMS | S_ADL | ADL_ABL)
-    brk.set_cycle(3, ADD_SB06 | ADD_SB7 | SB_ADH | ADH_ABH | PCH_DB)
-    brk.append_hex_to_cycle(4, RW | DB_ADD | S_SB | SB_ADD | SUMS)
-    brk.append_hex_to_cycle(5, ADD_SB06 | ADD_SB7 | SB_S | ADD_ADL | ADL_ABL | PCL_DB)
-    brk.append_hex_to_cycle(6, RW | DB_ADD | S_SB | SB_ADD | SUMS)
-    brk.append_hex_to_cycle(7, ADD_SB06 | ADD_SB7 | SB_S | ADD_ADL | ADL_ABL | P_DB)
-    brk.append_hex_to_cycle(8, RW | DB_ADD | S_SB | SB_ADD | SUMS)
-    brk.append_hex_to_cycle(9, ADD_SB06 | ADD_SB7 | SB_S)
-    brk.append_hex_to_cycle(10, DL_ADL | ADL_PCL)
-    brk.append_hex_to_cycle(11, DL_ADH | ADH_PCH)
+    brk.set_cycle(2, DBx_ADD | O_ADD | I_ADDC | SUMS | S_ADL | ADL_ABL, overwrite=True)
+    brk.set_cycle(3, ADD_SB06 | ADD_SB7 | SB_ADH | ADH_ABH | PCH_DB, overwrite=True)
+    brk.set_cycle(4, RW | DB_ADD | S_SB | SB_ADD | SUMS)
+    brk.set_cycle(5, ADD_SB06 | ADD_SB7 | SB_S | ADD_ADL | ADL_ABL | PCL_DB)
+    brk.set_cycle(6, RW | DB_ADD | S_SB | SB_ADD | SUMS)
+    brk.set_cycle(7, ADD_SB06 | ADD_SB7 | SB_S | ADD_ADL | ADL_ABL | P_DB)
+    brk.set_cycle(8, RW | DB_ADD | S_SB | SB_ADD | SUMS)
+    brk.set_cycle(9, ADD_SB06 | ADD_SB7 | SB_S)
+    brk.set_cycle(10, DL_ADL | ADL_PCL)
+    brk.set_cycle(11, DL_ADH | ADH_PCH)
     instructions.append(brk)
 
     # LDY immediate
     ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.IMM)
-    ldy_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
 
     # LDY zeropage
     ldy_zpg = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ZPG)
-    ldy_zpg.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_zpg.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    ldy_zpg.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_zpg.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_zpg)
 
     # LDY zeropage,X
     ldy_zpgx = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ZPGX)
-    ldy_zpgx.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_zpgx.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    ldy_zpgx.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_zpgx.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_zpgx)
 
     # LDY absolute
     ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ABS)
-    ldy_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
 
     # LDY absolute,X
     ldy_imm = Instruction(InstructionName.LDY, 0xA0, AdressModesList.ABSX)
-    ldy_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
     
     # LDX immediate
     ldx_imm = Instruction(InstructionName.LDX, 0xA2, AdressModesList.IMM)
-    ldx_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldx_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_X)
+    ldx_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    ldx_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_X)
     instructions.append(ldx_imm)
 
     # LDA zeropage
     lda_zpg = Instruction(InstructionName.LDA, 0xA5, AdressModesList.ZPG)
-    lda_zpg.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_zpg.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_zpg.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    lda_zpg.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
     instructions.append(lda_zpg)
 
     # LDA immediate
     lda_imm = Instruction(InstructionName.LDA, 0xA9, AdressModesList.IMM)
-    lda_imm.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_imm.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    lda_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
     instructions.append(lda_imm)
 
     # LDA absolute
     lda_abs = Instruction(InstructionName.LDA, 0xAD, AdressModesList.ABS)
-    lda_abs.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_abs.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_abs.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    lda_abs.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
     instructions.append(lda_abs)
 
     # LDA absolute,X
     lda_absx = Instruction(InstructionName.LDA, 0xBD, AdressModesList.ABSX)
-    lda_absx.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_absx.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_absx.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    lda_absx.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
     instructions.append(lda_absx)
 
     # LDA absolute,Y
     lda_absy = Instruction(InstructionName.LDA, 0xB9, AdressModesList.ABSY)
-    lda_absy.append_hex_to_cycle_after_addressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_absy.append_hex_to_cycle_after_addressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_absy.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
+    lda_absy.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
     instructions.append(lda_absy)
 
     # STA absolute
     sta_abs = Instruction(InstructionName.STA, 0x8D, AdressModesList.ABS)
-    sta_abs.append_hex_to_cycle_after_addressing(-1, AC_DB)
-    sta_abs.append_hex_to_cycle_after_addressing(0, RW)
+    sta_abs.set_cycle_after_adressing(-1, AC_DB)
+    sta_abs.set_cycle_after_adressing(0, RW)
     instructions.append(sta_abs)
 
     # STA zpg,X
     sta_zpgx = Instruction(InstructionName.STA, 0x95, AdressModesList.ZPGX)
-    sta_zpgx.append_hex_to_cycle_after_addressing(-1, AC_DB)
-    sta_zpgx.append_hex_to_cycle_after_addressing(0, RW)
+    sta_zpgx.set_cycle_after_adressing(-1, AC_DB)
+    sta_zpgx.set_cycle_after_adressing(0, RW)
     instructions.append(sta_zpgx)
 
     # STX absolute
     sty_abs = Instruction(InstructionName.STX, 0x8E, AdressModesList.ABS)
-    sty_abs.append_hex_to_cycle_after_addressing(-1, X_SB|SB_DB)
-    sty_abs.append_hex_to_cycle_after_addressing(0, RW)
+    sty_abs.set_cycle_after_adressing(-1, X_SB|SB_DB)
+    sty_abs.set_cycle_after_adressing(0, RW)
     instructions.append(sty_abs)
 
     # STX zeropage
     sty_zpg = Instruction(InstructionName.STX, 0x86, AdressModesList.ZPG)
-    sty_zpg.append_hex_to_cycle_after_addressing(-1, X_SB|SB_DB)
-    sty_zpg.append_hex_to_cycle_after_addressing(0, RW)
+    sty_zpg.set_cycle_after_adressing(-1, X_SB|SB_DB)
+    sty_zpg.set_cycle_after_adressing(0, RW)
     instructions.append(sty_zpg)
 
     # STY absolute
     sty_abs = Instruction(InstructionName.STY, 0x8C, AdressModesList.ABS)
-    sty_abs.append_hex_to_cycle_after_addressing(-1, Y_SB|SB_DB)
-    sty_abs.append_hex_to_cycle_after_addressing(0, RW)
+    sty_abs.set_cycle_after_adressing(-1, Y_SB|SB_DB)
+    sty_abs.set_cycle_after_adressing(0, RW)
     instructions.append(sty_abs)
 
     # STY zeropage
     sty_zpg = Instruction(InstructionName.STY, 0x84, AdressModesList.ZPG)
-    sty_zpg.append_hex_to_cycle_after_addressing(-1, Y_SB|SB_DB)
-    sty_zpg.append_hex_to_cycle_after_addressing(0, RW)
+    sty_zpg.set_cycle_after_adressing(-1, Y_SB|SB_DB)
+    sty_zpg.set_cycle_after_adressing(0, RW)
     instructions.append(sty_zpg)
 
     # TSX impl
     tsx_impl = Instruction(InstructionName.TSX, 0xBA, AdressModesList.IMP)
-    tsx_impl.append_hex_to_cycle_after_addressing(0, X_SB | SB_S | SB_DB | DBZ_Z | DB7_N)
+    tsx_impl.set_cycle_after_adressing(0, X_SB | SB_S | SB_DB | DBZ_Z | DB7_N)
     instructions.append(tsx_impl)
     # TXS impl
     txs_impl = Instruction(InstructionName.TXS, 0x9A, AdressModesList.IMP)
-    txs_impl.append_hex_to_cycle_after_addressing(0, X_SB | SB_S)
+    txs_impl.set_cycle_after_adressing(0, X_SB | SB_S)
     instructions.append(txs_impl)
 
     # TXA impl
     txa_impl = Instruction(InstructionName.TXA, 0x8A, AdressModesList.IMP)
-    txa_impl.append_hex_to_cycle_after_addressing(0, X_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
+    txa_impl.set_cycle_after_adressing(0, X_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
     instructions.append(txa_impl)
     # TAX impl
     tax_impl = Instruction(InstructionName.TAX, 0xAA, AdressModesList.IMP)
-    tax_impl.append_hex_to_cycle_after_addressing(0, AC_SB | SB_X | SB_DB | DBZ_Z | DB7_N)
+    tax_impl.set_cycle_after_adressing(0, AC_SB | SB_X | SB_DB | DBZ_Z | DB7_N)
     instructions.append(tax_impl)
 
     # TYA impl
     tya_impl = Instruction(InstructionName.TYA, 0x98, AdressModesList.IMP)
-    tya_impl.append_hex_to_cycle_after_addressing(0, Y_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
+    tya_impl.set_cycle_after_adressing(0, Y_SB | SB_AC | SB_DB | DBZ_Z | DB7_N)
     instructions.append(tya_impl)
     # TAY impl
     tay_impl = Instruction(InstructionName.TAY, 0xA8, AdressModesList.IMP)
-    tay_impl.append_hex_to_cycle_after_addressing(0, AC_SB | SB_Y | SB_DB | DBZ_Z | DB7_N)
+    tay_impl.set_cycle_after_adressing(0, AC_SB | SB_Y | SB_DB | DBZ_Z | DB7_N)
     instructions.append(tay_impl)
 
     for instruction in instructions:
