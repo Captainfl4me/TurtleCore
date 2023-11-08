@@ -134,6 +134,7 @@ class Instruction:
         self.__addressing_mode = addressing_mode
         self.__first_cycle_after_addressing = 0
         self.__cycles: list[tuple[int, int, int]] = [] # (cycle, flag, value)
+        self.__save_raw_cycles_after_adressing: list[tuple[int, int, Flag]] = [] # (cycle, flag, value)
         self.__flag = Flag.NULL
         self.__flag_inside_addressing = False
 
@@ -245,8 +246,9 @@ class Instruction:
     def new_cycle(self, cycle: int, value: int, flag: Flag = Flag.NULL):
         self.__cycles.append((cycle, flag.value, value))
 
-    def set_cycle_after_adressing(self, relative_cycle: int, value: int):
-        self.set_cycle(self.__first_cycle_after_addressing + relative_cycle, value)
+    def set_cycle_after_adressing(self, relative_cycle: int, value: int, flag: Flag = Flag.NULL):
+        self.__save_raw_cycles_after_adressing.append((relative_cycle, value, flag))
+        self.set_cycle(self.__first_cycle_after_addressing + relative_cycle, value, flag)
 
     def validate_instruction(self):
         if len(self.__cycles) == 0:
@@ -308,6 +310,12 @@ class Instruction:
         else:
             return max(cycles_with_flags)
 
+    def copyInstruction(self, new_opcode: int, new_adress_mode: AdressModesList):
+        new_instruction = Instruction(self.__name, new_opcode, new_adress_mode)
+        for cycle, value, flag in self.__save_raw_cycles_after_adressing:
+            new_instruction.set_cycle_after_adressing(cycle, value, flag)
+        return new_instruction
+        
     def __repr__(self) -> str:
         return f"Instruction({self.__name.value}, {self.__opcode:02x}, {self.__addressing_mode})"
 
@@ -404,65 +412,56 @@ def main():
     ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
     instructions.append(ldy_imm)
-
     # LDY zeropage
-    ldy_zpg = Instruction(InstructionName.LDY, 0xA4, AdressModesList.ZPG)
-    ldy_zpg.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_zpg.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    ldy_zpg = ldy_imm.copyInstruction(0xA4, AdressModesList.ZPG)
     instructions.append(ldy_zpg)
-
     # LDY zeropage,X
-    ldy_zpgx = Instruction(InstructionName.LDY, 0xB4, AdressModesList.ZPGX)
-    ldy_zpgx.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_zpgx.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
+    ldy_zpgx = ldy_imm.copyInstruction(0xB4, AdressModesList.ZPGX)
     instructions.append(ldy_zpgx)
-
     # LDY absolute
-    ldy_imm = Instruction(InstructionName.LDY, 0xAC, AdressModesList.ABS)
-    ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
-    instructions.append(ldy_imm)
-
+    ldy_abs = ldy_imm.copyInstruction(0xAC, AdressModesList.ABS)
+    instructions.append(ldy_abs)
     # LDY absolute,X
-    ldy_imm = Instruction(InstructionName.LDY, 0xBC, AdressModesList.ABSX)
-    ldy_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    ldy_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_Y)
-    instructions.append(ldy_imm)
+    ldy_absx = ldy_imm.copyInstruction(0xBC , AdressModesList.ABSX)
+    instructions.append(ldy_absx)
     
     # LDX immediate
     ldx_imm = Instruction(InstructionName.LDX, 0xA2, AdressModesList.IMM)
     ldx_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     ldx_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_X)
     instructions.append(ldx_imm)
-
-    # LDA zeropage
-    lda_zpg = Instruction(InstructionName.LDA, 0xA5, AdressModesList.ZPG)
-    lda_zpg.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_zpg.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
-    instructions.append(lda_zpg)
+    # LDX zeropage
+    ldx_zpg = ldx_imm.copyInstruction(0xA6, AdressModesList.ZPG)
+    # instructions.append(ldx_zpg)
+    # LDX zeropage,Y
+    ldx_zpgy = ldx_imm.copyInstruction(0xB6, AdressModesList.ZPGY)
+    # instructions.append(ldx_zpgy)
+    # LDX absolute
+    ldx_abs = ldx_imm.copyInstruction(0xAE, AdressModesList.ABS)
+    # instructions.append(ldx_abs)
+    # LDX absolute,Y
+    ldx_absy = ldx_imm.copyInstruction(0xBE, AdressModesList.ABSY)
+    # instructions.append(ldx_absy)
 
     # LDA immediate
     lda_imm = Instruction(InstructionName.LDA, 0xA9, AdressModesList.IMM)
     lda_imm.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
     lda_imm.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    # LDA zeropage
+    lda_zpg = lda_imm.copyInstruction(0xA5, AdressModesList.ZPG)
+    instructions.append(lda_zpg)
     instructions.append(lda_imm)
-
+    # LDA zeropage,X
+    lda_zpgx = lda_imm.copyInstruction(0xB5, AdressModesList.ZPGX)
+    # instructions.append(lda_zpgx)
     # LDA absolute
-    lda_abs = Instruction(InstructionName.LDA, 0xAD, AdressModesList.ABS)
-    lda_abs.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_abs.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_abs = lda_imm.copyInstruction(0xAD, AdressModesList.ABS)
     instructions.append(lda_abs)
-
     # LDA absolute,X
-    lda_absx = Instruction(InstructionName.LDA, 0xBD, AdressModesList.ABSX)
-    lda_absx.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_absx.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_absx = lda_imm.copyInstruction(0xBD, AdressModesList.ABSX)
     instructions.append(lda_absx)
-
     # LDA absolute,Y
-    lda_absy = Instruction(InstructionName.LDA, 0xB9, AdressModesList.ABSY)
-    lda_absy.set_cycle_after_adressing(0, DL_DB | DB_ADD | O_ADD | SUMS | DBZ_Z | DB7_N)
-    lda_absy.set_cycle_after_adressing(1, ADD_SB06 | ADD_SB7 | SB_AC)
+    lda_absy = lda_imm.copyInstruction(0xB9, AdressModesList.ABSY)
     instructions.append(lda_absy)
 
     # STA absolute
