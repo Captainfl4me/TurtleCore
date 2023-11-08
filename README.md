@@ -18,7 +18,7 @@ Acronym | Name | Goal
 --|--|--
 DL | Data latch | This register store the data on the input bus every clock.
 PCL | Program Counter Low | This register is the lowest 8 bits of the 16 bits of the program counter.
-PCH | Program Counter High | This register is the highest 8 bits of the 16 bits of the program counter. 
+PCH | Program Counter High | This register is the highest 8 bits of the 16 bits of the program counter.
 ABL | Adress Bus Low | Hold the low 8 bits of the adress bus.
 ABH | Adress Bus High | Hold the high 8 bits of the adress bus.
 S | Stack pointer | The stack pointer is an 8 bit register and holds the low 8 bits of the next free location on the stack. The location of the stack is fixed and cannot be moved.
@@ -37,7 +37,7 @@ There is 7 flags that are stored in the processor status.
 - Decimal Mode: If decimal flag is set processor will use BCD (Binary Coded Decimal) arithmetic for addition and substraction. It can be set or clear.
 - Break Command: This bit is set when a BRK instruction has been executed.
 - Overflow Flag: The flag is set if the result is an invalid 2's complement result. (64 + 64 = -128).
-- Negative Flag: The negative flag is set if the result of the last operation had bit 7 set to a one. So the number is negative if the bit is signed. 
+- Negative Flag: The negative flag is set if the result of the last operation had bit 7 set to a one. So the number is negative if the bit is signed.
 
 ### Intructions
 
