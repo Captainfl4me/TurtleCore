@@ -166,7 +166,7 @@ class Instruction:
         if self.__addressing_mode == AdressModesList.A:
             self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
-            self.__first_cycle_after_addressing = 3
+            self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.ABS:
             self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.append_hex_to_cycle(3, DL_DB | DB_ADD | O_ADD | PCL_PCL | PCH_PCH | PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | SUMS | I_PC)
@@ -191,11 +191,11 @@ class Instruction:
         elif self.__addressing_mode == AdressModesList.IMM:
             self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
-            self.__first_cycle_after_addressing = 3
+            self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.IMP:
             self.append_hex_to_cycle(2, PCL_ADL | PCH_ADH | ADL_ABL | ADH_ABH | I_PC)
             self.append_hex_to_cycle(3, PCL_PCL | PCH_PCH)
-            self.__first_cycle_after_addressing = 3
+            self.__first_cycle_after_addressing = 4
         elif self.__addressing_mode == AdressModesList.IND:
             raise NotImplementedError("Indirect addressing mode is not implemented yet!")
         elif self.__addressing_mode == AdressModesList.XIND:
