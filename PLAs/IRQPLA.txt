@@ -1,2 +1,0 @@
-# Logisim PLA program table
-00000000 01
