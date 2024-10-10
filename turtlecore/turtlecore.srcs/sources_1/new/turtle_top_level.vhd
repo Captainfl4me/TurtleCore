@@ -29,6 +29,7 @@ package turtle_core is
     type t_branch_condition is (NoCondition, CarryFlagClear, CarryFlagSet, ZeroFlagClear, ZeroFlagSet, NegativeFlagClear, NegativeFlagSet, OverflowFlagClear, OverflowFlagSet);
     type t_reg_file_registers is (RA, RB, RX, RY);
     
+    subtype t_addr_byte is std_logic_vector(15 downto 0);
     subtype t_byte is std_logic_vector(7 downto 0);
     type t_registers_array is array(t_reg_file_registers) of t_byte;
 end package;
@@ -101,16 +102,44 @@ architecture RTL of turtle_top_level is
             o_result   : out t_byte
         );
     end component alu;
+    signal s_overflow_alu : std_logic := '0';
+    signal s_carry_alu    : std_logic := '0';
     signal s_result   : t_byte := (others => '0');
-    signal s_overflow : std_logic := '0';
-    signal s_carry    : std_logic := '0';
     signal s_math_op  : t_math_op := Increment;
     signal s_alu_rb   : t_byte := (others => '0');    
+    
+    component counter_register is
+        Generic(COUNTER_SIZE: integer);
+        Port (
+            i_clk    : in std_logic;
+            i_rst    : in std_logic;
+            i_incr   : in std_logic;
+            i_clk_en : in std_logic;
+            i_load   : in std_logic;
+            i_data   : in unsigned(COUNTER_SIZE-1 downto 0);
+            o_data   : out unsigned(COUNTER_SIZE-1 downto 0)
+        );
+    end component counter_register;
+    signal s_pc : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_pc_en   : std_logic := '0';
+    signal s_pc_load : std_logic := '0';
+    signal s_pc_in : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_stack      : unsigned(t_byte'range) := (others => '0');
+    signal s_stack_en   : std_logic := '0';
+    signal s_stack_incr : std_logic := '0';
 
-    type t_cpu_state is (fetching_ir, fetching_addr_low, fetching_addr_high, executing_ir);
+    type t_cpu_state is (fetching_ir, fetching_addr_low, fetching_addr_high, executing_ir_with_pc, executing_ir_without_pc);
     signal s_current_state : t_cpu_state := fetching_ir;
-    signal s_is_loading    : std_logic := '1'; 
-    signal s_pc            : unsigned(15 downto 0) := (others => '0');
+    signal s_wait_for_starting_edge : std_logic := '1';
+    signal s_is_loading    : std_logic := '1';
+    signal s_addr          : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_addr_new      : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_overflow : std_logic := '0';
+    signal s_carry    : std_logic := '0';
+    signal s_zero     : std_logic := '0';
+    signal s_negative : std_logic := '0';
+    signal s_should_jump : std_logic := '0';
+    signal s_halt     : std_logic := '0';
 begin
     reg_instruction : instruction_register
         port map (
@@ -127,11 +156,16 @@ begin
             o_branch_condition => s_branch_condition
         );
     
-    s_reg_file_load <= '1' when s_opcode = Load or s_opcode = Transfer or s_opcode = Math else '0';
-    s_reg_file_data_in <= io_data_bus when s_opcode = Load else 
+    io_data_bus <= s_reg_file_data_out(s_reg1) when s_current_state = executing_ir_without_pc and (s_opcode = Store or s_opcode = Push) else
+                   (others => 'Z');
+    o_rw <= '1' when s_current_state = executing_ir_without_pc and (s_opcode = Store or s_opcode = Push) else '0';
+    s_halt <= '1' when s_wait_for_starting_edge='0' and s_opcode=Break else '0';
+    
+    s_reg_file_load <= '1' when (s_opcode = Load or s_opcode = Transfer or s_opcode = Math or s_opcode = Pull) and s_is_loading = '0' else '0';
+    s_reg_file_data_in <= io_data_bus when s_opcode = Load or s_opcode = Pull else
                           s_reg_file_data_out(s_reg1) when s_opcode = Transfer else
                           s_result;
-    s_reg_file_addr <= s_reg1 when s_opcode = Load else
+    s_reg_file_addr <= s_reg1 when s_opcode = Load or s_opcode = Pull else
                        s_reg2 when s_opcode = Transfer else
                        RA;
     reg_file : register_file
@@ -144,37 +178,135 @@ begin
             o_data => s_reg_file_data_out
         );
 
-    s_alu_rb <= t_byte(to_unsigned(1, t_byte'high)) when s_math_op = Increment else s_reg_file_data_out(RB);
+    -- ALU
+    s_alu_rb <= t_byte(to_unsigned(1, t_byte'length)) when s_math_op = Increment else s_reg_file_data_out(RB);
     reg_alu : alu
         port map (
             i_a        => s_reg_file_data_out(RA),
             i_b        => s_alu_rb,
             i_math_op  => s_math_op,
-            o_overflow => s_overflow,
-            o_carry    => s_carry,
+            o_overflow => s_overflow_alu,
+            o_carry    => s_carry_alu,
             o_result   => s_result
         );
+        
+    -- FLAGS
+    process(i_clk, i_rst) is
+    begin
+        if i_rst = '1' then
+        elsif rising_edge(i_clk) and (s_current_state = executing_ir_without_pc or s_current_state = executing_ir_with_pc) then
+            s_carry <= s_carry_alu;
+            s_overflow <= s_overflow_alu;
+            s_negative <= s_reg_file_data_in(s_reg_file_data_in'left);
+            if s_reg_file_data_in = (s_reg_file_data_in'range => '0') then
+                s_zero <= '1';
+            else
+                s_zero <= '0';
+            end if;
+        end if;
+    end process;
     
-    -- STATE MACHINE
-    s_is_loading <= '1' when s_current_state = fetching_ir else '0';
-    o_addr_bus <= std_logic_vector(s_pc);
+    -- JUMP FLAG
+    s_should_jump <= '1'             when s_branch_condition = NoCondition       else
+                      not s_carry    when s_branch_condition = CarryFlagClear    else
+                      s_carry        when s_branch_condition = CarryFlagSet      else
+                      not s_zero     when s_branch_condition = ZeroFlagClear     else
+                      s_zero         when s_branch_condition = ZeroFlagSet       else
+                      not s_negative when s_branch_condition = NegativeFlagClear else
+                      s_negative     when s_branch_condition = NegativeFlagSet   else
+                      not s_overflow when s_branch_condition = OverflowFlagClear else
+                      s_overflow     when s_branch_condition = OverflowFlagSet   else
+                      '0';
+    
+    -- STATE MACHINE & PROGRAM COUNTER
+    s_is_loading <= '1' when s_current_state = fetching_ir and s_halt = '0' else '0';
+    o_addr_bus <= std_logic_vector(s_addr);
     process(i_clk, i_rst) is
     begin
         if i_rst = '1' then
             s_current_state <= fetching_ir;
-            s_pc <= (others => '0');
-        elsif rising_edge(i_clk) then
-            s_pc <= s_pc + 1;
+            s_addr <= (others => '0');
+        elsif falling_edge(i_clk) and s_wait_for_starting_edge='0' and s_halt = '0' then
+            s_addr <= s_pc;
             if s_current_state = fetching_ir then
-                if s_addr_mode = relative then
+                if s_addr_mode = relative or s_opcode = Jump then
                     s_current_state <= fetching_addr_low;
+                elsif s_opcode = Transfer or s_opcode = Push or s_opcode = Pull or s_opcode = Math then
+                    s_current_state <= executing_ir_without_pc;
+                    if s_opcode = Push then
+                        s_addr <= x"00" & s_stack;
+                    elsif s_opcode = Pull then
+                        s_addr <= x"00" & (s_stack - 1);
+                    end if;
                 else
-                    s_current_state <= executing_ir;
+                    s_current_state <= executing_ir_with_pc;
                 end if;
             elsif s_current_state = fetching_addr_low then
-                s_current_state <= fetching_addr_high;            
+                s_current_state <= fetching_addr_high;      
+            elsif s_current_state = fetching_addr_high then
+                if s_opcode = Jump then
+                    s_current_state <= fetching_ir;
+                else
+                    s_current_state <= executing_ir_without_pc;
+                    s_addr <= s_addr_new;
+                end if;
             else
                 s_current_state <= fetching_ir;
+            end if;
+        end if;
+    end process;
+                      
+    -- PROGRAM COUNTER
+    pc_inst: counter_register
+        Generic map (COUNTER_SIZE => t_addr_byte'length)
+        Port map (
+            i_clk    => i_clk,
+            i_rst    => i_rst,
+            i_incr   => '1',
+            i_clk_en => s_pc_en,
+            i_load   => s_pc_load,
+            i_data   => s_pc_in,
+            o_data   => s_pc
+        );
+    s_pc_in <= (unsigned(io_data_bus) & s_addr_new(7 downto 0));
+    s_pc_en <= '1' when s_current_state/=executing_ir_without_pc and s_halt = '0' else '0';
+    s_pc_load <= '1' when s_opcode = Jump and s_current_state = fetching_addr_high and s_should_jump = '1' else '0';
+    
+    -- STACK COUNTER
+    stack_inst: counter_register
+        Generic map (COUNTER_SIZE => t_byte'length)
+        Port map (
+            i_clk    => i_clk,
+            i_rst    => i_rst,
+            i_incr   => s_stack_incr,
+            i_clk_en => s_stack_en,
+            i_load   => '0',
+            i_data   => (others => '0'),
+            o_data   => s_stack
+        );
+    s_stack_en <= '1' when (s_opcode = Push or s_opcode = Pull) and s_current_state=executing_ir_without_pc else '0';
+    s_stack_incr <= '1' when s_opcode = Push else '0';
+    
+    -- AFTER RESET SYNC
+    process(i_clk, i_rst) is
+    begin
+        if i_rst = '1' then
+            s_wait_for_starting_edge <= '1';
+        elsif rising_edge(i_clk) then
+            s_wait_for_starting_edge <= '0';
+        end if;
+    end process;
+    
+    -- Intermediate ADDR NEW (load relative addr)
+    process(i_clk, i_rst) is
+    begin
+        if i_rst = '1' then
+            s_addr_new <= (others => '0');
+        elsif rising_edge(i_clk) then
+            if s_current_state = fetching_addr_low then
+                s_addr_new(7 downto 0) <= unsigned(io_data_bus);
+            elsif s_current_state = fetching_addr_high then
+                s_addr_new(15 downto 8) <= unsigned(io_data_bus);
             end if;
         end if;
     end process;

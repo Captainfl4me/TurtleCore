@@ -37,18 +37,21 @@ entity alu is
 end alu;
 
 architecture RTL of alu is
-    signal s_result : std_logic_vector(t_byte'high downto 0) := (others => '0');
+    signal s_result : std_logic_vector(t_byte'left+1 downto t_byte'right) := (others => '0');
+    signal s_a_resize : std_logic_vector(t_byte'left+1 downto t_byte'right) := (others => '0');
 begin
-    s_result <= std_logic_vector(unsigned(i_a) + 1) when i_math_op = Increment else
-                std_logic_vector(unsigned(i_a) + unsigned(i_b)) when i_math_op = Add else
-                std_logic_vector(unsigned(i_a) - unsigned(i_b)) when i_math_op = Sub else
-                i_a and i_b when i_math_op = And_op else
-                i_a or i_b when i_math_op = Or_op else
-                i_a xor i_b when i_math_op = Eor else
-                std_logic_vector(shift_left(unsigned(i_a), 1)) when  i_math_op = ShiftLeft else
-                std_logic_vector(shift_right(unsigned(i_a), 1)) when  i_math_op = ShiftRight else
+    s_a_resize <= '0' & i_a;
+    s_result <= std_logic_vector(unsigned(s_a_resize) + 1) when i_math_op = Increment else
+                std_logic_vector(unsigned(s_a_resize) + unsigned(i_b)) when i_math_op = Add else
+                std_logic_vector(unsigned(s_a_resize) - unsigned(i_b)) when i_math_op = Sub else
+                '0' & (i_a and i_b) when i_math_op = And_op else
+                '0' & (i_a or i_b) when i_math_op = Or_op else
+                '0' & (i_a xor i_b) when i_math_op = Eor else
+                std_logic_vector(shift_left(unsigned(s_a_resize), 1)) when  i_math_op = ShiftLeft else
+                std_logic_vector(shift_right(unsigned(s_a_resize), 1)) when  i_math_op = ShiftRight else
                 (others => '0');
                 
-    o_carry <= s_result(s_result'high);
+    o_overflow <= (not i_a(i_a'high) and not i_b(i_a'high) and s_result(s_result'high)) or (i_a(i_a'high) and i_b(i_a'high) and not s_result(s_result'high));
+    o_carry <= s_result(s_result'left);
     o_result <= s_result(t_byte'range);
 end RTL;

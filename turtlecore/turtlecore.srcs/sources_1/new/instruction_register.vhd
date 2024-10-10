@@ -72,9 +72,9 @@ begin
               RY when s_ir(5 downto 4) = "10" else
               RX when s_ir(5 downto 4) = "01" else
               RA;
-    o_reg2 <= RB when s_ir(5 downto 4) = "11" else
-              RY when s_ir(5 downto 4) = "10" else
-              RX when s_ir(5 downto 4) = "01" else
+    o_reg2 <= RB when s_ir(7 downto 6) = "11" else
+              RY when s_ir(7 downto 6) = "10" else
+              RX when s_ir(7 downto 6) = "01" else
               RA;
 
     o_math_op <= ShiftRight when s_ir(7 downto 4) = "0111" else

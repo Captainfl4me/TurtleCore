@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb" />
+            <top_module name="turtle_core" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="450 ps"></ZoomStartTime>
+      <ZoomEndTime time="906 ps"></ZoomEndTime>
+      <Cursor1Time time="710 ps"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="25" />
+   <wvobject type="logic" fp_name="/tb/tc_inst/i_clk">
+      <obj_property name="ElementShortName">i_clk</obj_property>
+      <obj_property name="ObjectShortName">i_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/i_rst">
+      <obj_property name="ElementShortName">i_rst</obj_property>
+      <obj_property name="ObjectShortName">i_rst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/io_data_bus">
+      <obj_property name="ElementShortName">io_data_bus[7:0]</obj_property>
+      <obj_property name="ObjectShortName">io_data_bus[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/s_addr">
+      <obj_property name="ElementShortName">s_addr[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_addr[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/s_addr_new">
+      <obj_property name="ElementShortName">s_addr_new[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_addr_new[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/s_pc">
+      <obj_property name="ElementShortName">s_pc[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_pc[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/s_stack">
+      <obj_property name="ElementShortName">s_stack[7:0]</obj_property>
+      <obj_property name="ObjectShortName">s_stack[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/o_rw">
+      <obj_property name="ElementShortName">o_rw</obj_property>
+      <obj_property name="ObjectShortName">o_rw</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/reg_file/s_registers">
+      <obj_property name="ElementShortName">s_registers[0:3][7:0]</obj_property>
+      <obj_property name="ObjectShortName">s_registers[0:3][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/reg_instruction/o_instruction_data">
+      <obj_property name="ElementShortName">o_instruction_data</obj_property>
+      <obj_property name="ObjectShortName">o_instruction_data</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/reg_instruction/o_opcode">
+      <obj_property name="ElementShortName">o_opcode</obj_property>
+      <obj_property name="ObjectShortName">o_opcode</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/reg_instruction/o_addr_mode">
+      <obj_property name="ElementShortName">o_addr_mode</obj_property>
+      <obj_property name="ObjectShortName">o_addr_mode</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/reg_instruction/o_reg1">
+      <obj_property name="ElementShortName">o_reg1</obj_property>
+      <obj_property name="ObjectShortName">o_reg1</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/reg_instruction/o_reg2">
+      <obj_property name="ElementShortName">o_reg2</obj_property>
+      <obj_property name="ObjectShortName">o_reg2</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/reg_instruction/o_branch_condition">
+      <obj_property name="ElementShortName">o_branch_condition</obj_property>
+      <obj_property name="ObjectShortName">o_branch_condition</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/reg_instruction/s_ir">
+      <obj_property name="ElementShortName">s_ir[7:0]</obj_property>
+      <obj_property name="ObjectShortName">s_ir[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/s_current_state">
+      <obj_property name="ElementShortName">s_current_state</obj_property>
+      <obj_property name="ObjectShortName">s_current_state</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb/tc_inst/reg_instruction/o_math_op">
+      <obj_property name="ElementShortName">o_math_op</obj_property>
+      <obj_property name="ObjectShortName">o_math_op</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb/tc_inst/reg_alu/o_result">
+      <obj_property name="ElementShortName">o_result[7:0]</obj_property>
+      <obj_property name="ObjectShortName">o_result[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/s_overflow">
+      <obj_property name="ElementShortName">s_overflow</obj_property>
+      <obj_property name="ObjectShortName">s_overflow</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/s_carry">
+      <obj_property name="ElementShortName">s_carry</obj_property>
+      <obj_property name="ObjectShortName">s_carry</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/s_zero">
+      <obj_property name="ElementShortName">s_zero</obj_property>
+      <obj_property name="ObjectShortName">s_zero</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/s_negative">
+      <obj_property name="ElementShortName">s_negative</obj_property>
+      <obj_property name="ObjectShortName">s_negative</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/reg_alu/o_overflow">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_overflow</obj_property>
+      <obj_property name="ObjectShortName">o_overflow</obj_property>
+      <obj_property name="label">o_overflow (alu)</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb/tc_inst/reg_alu/o_carry">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_carry</obj_property>
+      <obj_property name="ObjectShortName">o_carry</obj_property>
+      <obj_property name="label">o_carry (alu)</obj_property>
+   </wvobject>
+</wave_config>
