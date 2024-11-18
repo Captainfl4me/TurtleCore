@@ -1,0 +1,27 @@
+; basic counter program
+.org $0000
+
+init:
+	; Init state VAR
+	load ra,#0
+	store ra,$8000
+	; Init counter VAR
+	store ra,$FFFF
+wait_for_change:
+	load ra,$FFFD ; Load addr_switch_bar_low
+	load rb,#$01	
+	and
+	tf ra,rx
+	load rb,$8000
+	eor
+	bzc incr_counter
+	jump wait_for_change
+
+incr_counter:
+	store rx,$8000
+	load ra,$FFFF
+	incr
+	store ra,$FFFF
+	jump wait_for_change
+
+.include "./bios.tasm"

@@ -1,0 +1,14 @@
+vhdl xil_defaultlib  \
+"../../../bd/design_1/ipshared/9d93/src/alu.vhd" \
+"../../../bd/design_1/ipshared/9d93/src/counter_register.vhd" \
+"../../../bd/design_1/ipshared/9d93/src/instruction_register.vhd" \
+"../../../bd/design_1/ipshared/9d93/src/register_file.vhd" \
+"../../../bd/design_1/ipshared/9d93/sim/tb.vhd" \
+"../../../bd/design_1/ipshared/9d93/src/turtle_top_level.vhd" \
+"../../../bd/design_1/ip/design_1_turtle_core_0_0/sim/design_1_turtle_core_0_0.vhd" \
+"../../../bd/design_1/ip/design_1_MCC_0_0/sim/design_1_MCC_0_0.vhd" \
+"../../../bd/design_1/ip/design_1_led_bar_0_0/sim/design_1_led_bar_0_0.vhd" \
+"../../../bd/design_1/sim/design_1.vhd" \
+
+# Do not sort compile order
+nosort

@@ -1,0 +1,2 @@
+; .define addr_switch_bar_low $FFFD
+; .define addr_switch_bar_high $FFFC

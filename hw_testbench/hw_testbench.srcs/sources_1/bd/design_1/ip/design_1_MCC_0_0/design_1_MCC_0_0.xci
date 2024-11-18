@@ -1,0 +1,58 @@
+{
+  "schema": "xilinx.com:schema:json_instance:1.0",
+  "ip_inst": {
+    "xci_name": "design_1_MCC_0_0",
+    "cell_name": "MCC_0",
+    "component_reference": "xilinx.com:module_ref:MCC:1.0",
+    "ip_revision": "1",
+    "gen_directory": "../../../../../../hw_testbench.gen/sources_1/bd/design_1/ip/design_1_MCC_0_0",
+    "parameters": {
+      "component_parameters": {
+        "Component_Name": [ { "value": "design_1_MCC_0_0", "resolve_type": "user", "usage": "all" } ]
+      },
+      "project_parameters": {
+        "ARCHITECTURE": [ { "value": "artix7" } ],
+        "BASE_BOARD_PART": [ { "value": "" } ],
+        "BOARD_CONNECTIONS": [ { "value": "" } ],
+        "DEVICE": [ { "value": "xc7a35t" } ],
+        "NEXTGEN_VERSAL": [ { "value": "0" } ],
+        "PACKAGE": [ { "value": "cpg236" } ],
+        "PREFHDL": [ { "value": "VHDL" } ],
+        "SILICON_REVISION": [ { "value": "" } ],
+        "SIMULATOR_LANGUAGE": [ { "value": "MIXED" } ],
+        "SPEEDGRADE": [ { "value": "-1" } ],
+        "STATIC_POWER": [ { "value": "" } ],
+        "TEMPERATURE_GRADE": [ { "value": "" } ]
+      },
+      "runtime_parameters": {
+        "IPCONTEXT": [ { "value": "IP_Integrator" } ],
+        "IPREVISION": [ { "value": "1" } ],
+        "MANAGED": [ { "value": "TRUE" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../hw_testbench.gen/sources_1/bd/design_1/ip/design_1_MCC_0_0" } ],
+        "SELECTEDSIMMODEL": [ { "value": "" } ],
+        "SHAREDDIR": [ { "value": "../../ipshared" } ],
+        "SWVERSION": [ { "value": "2024.1" } ],
+        "SYNTHESISFLOW": [ { "value": "GLOBAL" } ]
+      }
+    },
+    "boundary": {
+      "ports": {
+        "i_rw": [ { "direction": "in" } ],
+        "i_write_cpu_bus": [ { "direction": "in", "size_left": "7", "size_right": "0" } ],
+        "i_addr_bus": [ { "direction": "in", "size_left": "15", "size_right": "0" } ],
+        "i_data_RAM": [ { "direction": "in", "size_left": "7", "size_right": "0" } ],
+        "i_data_ROM": [ { "direction": "in", "size_left": "7", "size_right": "0" } ],
+        "i_led_bar": [ { "direction": "in", "size_left": "15", "size_right": "0" } ],
+        "i_switch_bar": [ { "direction": "in", "size_left": "15", "size_right": "0" } ],
+        "o_debug_bus": [ { "direction": "out", "size_left": "7", "size_right": "0" } ],
+        "o_read_cpu_bus": [ { "direction": "out", "size_left": "7", "size_right": "0" } ],
+        "o_data": [ { "direction": "out", "size_left": "7", "size_right": "0" } ],
+        "o_addr_RAM": [ { "direction": "out", "size_left": "14", "size_right": "0" } ],
+        "o_write_RAM": [ { "direction": "out" } ],
+        "o_addr_led_bar": [ { "direction": "out", "size_left": "0", "size_right": "0" } ],
+        "o_write_led_bar": [ { "direction": "out" } ],
+        "o_addr_ROM": [ { "direction": "out", "size_left": "14", "size_right": "0" } ]
+      }
+    }
+  }
+}
