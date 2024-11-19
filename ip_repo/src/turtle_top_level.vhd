@@ -26,7 +26,7 @@ package turtle_core is
     type t_adressing_mode is (immediate, relative);
     type t_instruction_data is (NoData, Registers, MathOperand, BranchCondition, DoubleRegisters);
     type t_math_op is (Increment, Add, Sub, And_op, Or_op, Eor, ShiftLeft, ShiftRight);
-    type t_branch_condition is (NoCondition, CarryFlagClear, CarryFlagSet, ZeroFlagClear, ZeroFlagSet, NegativeFlagClear, NegativeFlagSet, OverflowFlagClear, OverflowFlagSet);
+    type t_branch_condition is (NoCondition, CarryFlagClear, CarryFlagSet, ZeroFlagClear, ZeroFlagSet, NegativeFlagClear, NegativeFlagSet, OverflowFlagClear, OverflowFlagSet, JumpToSubroutine, ReturnFromSubroutine);
     type t_reg_file_registers is (RA, RB, RX, RY);
     
     subtype t_addr_byte is std_logic_vector(15 downto 0);
@@ -129,11 +129,12 @@ architecture RTL of turtle_top_level is
     signal s_stack_en   : std_logic := '0';
     signal s_stack_incr : std_logic := '0';
 
-    type t_cpu_state is (fetching_ir, fetching_addr_low, fetching_addr_high, executing_ir_with_pc, executing_ir_without_pc);
+    type t_cpu_state is (fetching_ir, fetching_addr_low, fetching_addr_high, executing_ir_with_pc, executing_ir_without_pc, executing_ir_without_pc_high);
     signal s_current_state          : t_cpu_state := fetching_ir;
     signal s_wait_for_starting_edge : std_logic := '1';
     signal s_is_loading             : std_logic := '1';
     signal s_is_exec                : std_logic := '0';
+    signal s_is_exec_without_pc     : std_logic := '0';
     signal s_addr                   : unsigned(t_addr_byte'range) := (others => '0');
     signal s_addr_new               : unsigned(t_addr_byte'range) := (others => '0');
     signal s_should_jump            : std_logic := '0';
@@ -160,9 +161,11 @@ begin
             o_branch_condition => s_branch_condition
         );
     
-    o_data_bus <= s_reg_file_data_out(s_reg1) when s_current_state = executing_ir_without_pc and (s_opcode = Store or s_opcode = Push) else
-                   (others => 'Z');
-    o_rw <= '1' when s_current_state = executing_ir_without_pc and (s_opcode = Store or s_opcode = Push) else '0';
+    o_data_bus <= s_reg_file_data_out(s_reg1)         when s_current_state = executing_ir_without_pc and (s_opcode = Store or s_opcode = Push) else
+                  std_logic_vector(s_addr_new(7 downto 0))  when s_current_state = executing_ir_without_pc and s_opcode = Jump and s_branch_condition = JumpToSubroutine else
+                  std_logic_vector(s_addr_new(15 downto 8)) when s_current_state = executing_ir_without_pc_high and s_opcode = Jump and s_branch_condition = JumpToSubroutine else
+                  (others => 'Z');
+    o_rw <= '1' when s_is_exec_without_pc = '1' and (s_opcode = Store or s_opcode = Push or (s_opcode = Jump and s_branch_condition = JumpToSubroutine)) else '0';
     s_halt <= '1' when s_wait_for_starting_edge = '0' and s_opcode=Break else '0';
     
     s_reg_file_load <= '1' when (s_opcode = Load or s_opcode = Transfer or s_opcode = Math or s_opcode = Pull) and s_is_loading = '0' and s_is_exec = '1' else '0';
@@ -219,19 +222,22 @@ begin
     end process;
     
     -- JUMP FLAG
-    s_should_jump <= '1'             when s_branch_condition = NoCondition       else
-                      not s_carry    when s_branch_condition = CarryFlagClear    else
-                      s_carry        when s_branch_condition = CarryFlagSet      else
-                      not s_zero     when s_branch_condition = ZeroFlagClear     else
-                      s_zero         when s_branch_condition = ZeroFlagSet       else
-                      not s_negative when s_branch_condition = NegativeFlagClear else
-                      s_negative     when s_branch_condition = NegativeFlagSet   else
-                      not s_overflow when s_branch_condition = OverflowFlagClear else
-                      s_overflow     when s_branch_condition = OverflowFlagSet   else
+    s_should_jump <= '1'             when s_branch_condition = NoCondition          else
+                      not s_carry    when s_branch_condition = CarryFlagClear       else
+                      s_carry        when s_branch_condition = CarryFlagSet         else
+                      not s_zero     when s_branch_condition = ZeroFlagClear        else
+                      s_zero         when s_branch_condition = ZeroFlagSet          else
+                      not s_negative when s_branch_condition = NegativeFlagClear    else
+                      s_negative     when s_branch_condition = NegativeFlagSet      else
+                      not s_overflow when s_branch_condition = OverflowFlagClear    else
+                      s_overflow     when s_branch_condition = OverflowFlagSet      else
+                      '1'            when s_branch_condition = JumpToSubroutine     else
+                      '1'            when s_branch_condition = ReturnFromSubroutine else
                       '0';
     
     -- STATE MACHINE & PROGRAM COUNTER
-    s_is_exec <= '1' when s_current_state = executing_ir_without_pc or s_current_state = executing_ir_with_pc else '0';
+    s_is_exec <= '1' when s_current_state = executing_ir_without_pc or s_current_state = executing_ir_with_pc or s_current_state = executing_ir_without_pc_high else '0';
+    s_is_exec_without_pc <= '1' when s_current_state = executing_ir_without_pc or s_current_state = executing_ir_without_pc_high else '0';
     s_is_loading <= '1' when s_current_state = fetching_ir and s_halt = '0' else '0';
     o_addr_bus <= std_logic_vector(s_addr);
     process(i_clk, i_rst) is
@@ -243,8 +249,11 @@ begin
             s_addr <= s_pc;
             case s_current_state is
                 when fetching_ir =>
-                    if s_addr_mode = relative or s_opcode = Jump then
+                    if s_addr_mode = relative then
                         s_current_state <= fetching_addr_low;
+                        if s_opcode = Jump and s_branch_condition = ReturnFromSubroutine then
+                            s_addr <= x"80" & (s_stack - 1);
+                        end if;
                     elsif s_opcode = Transfer or s_opcode = Push or s_opcode = Pull or s_opcode = Math then
                         s_current_state <= executing_ir_without_pc;
                         if s_opcode = Push then
@@ -257,13 +266,28 @@ begin
                     end if;
                 when fetching_addr_low =>
                     s_current_state <= fetching_addr_high;    
+                    if s_branch_condition = ReturnFromSubroutine then
+                        s_addr <= x"80" & (s_stack - 1);
+                    end if;
                 when fetching_addr_high =>
                     if s_opcode = Jump then
-                        s_current_state <= fetching_ir;
+                        if s_branch_condition = JumpToSubroutine then
+                            s_current_state <= executing_ir_without_pc;
+                            s_addr <= x"80" & s_stack;
+                        else
+                            s_current_state <= fetching_ir;
+                        end if;
                     else
                         s_current_state <= executing_ir_without_pc;
                         s_addr <= s_addr_new;
                     end if;
+                when executing_ir_without_pc =>
+                    if s_opcode = Jump and s_branch_condition = JumpToSubroutine then
+                        s_current_state <= executing_ir_without_pc_high;
+                        s_addr <= x"80" & s_stack;
+                    else
+                        s_current_state <= fetching_ir;
+                    end if;           
                 when others =>
                     s_current_state <= fetching_ir;
                 end case;
@@ -283,7 +307,7 @@ begin
             o_data   => s_pc
         );
     s_pc_in <= (unsigned(i_data_bus) & s_addr_new(7 downto 0));
-    s_pc_en <= '1' when s_current_state/=executing_ir_without_pc and s_halt = '0' else '0';
+    s_pc_en <= '1' when s_is_exec_without_pc = '0' and s_halt = '0' else '0';
     s_pc_load <= '1' when s_opcode = Jump and s_current_state = fetching_addr_high and s_should_jump = '1' else '0';
     
     -- STACK COUNTER
@@ -298,8 +322,10 @@ begin
             i_data   => (others => '0'),
             o_data   => s_stack
         );
-    s_stack_en <= '1' when (s_opcode = Push or s_opcode = Pull) and s_current_state=executing_ir_without_pc else '0';
-    s_stack_incr <= '1' when s_opcode = Push else '0';
+    s_stack_en <= '1' when ((s_opcode = Push or s_opcode = Pull or (s_opcode = Jump and s_branch_condition = JumpToSubroutine)) and s_is_exec_without_pc = '1')
+                            or (s_opcode = Jump and s_branch_condition = ReturnFromSubroutine and (s_current_state = fetching_addr_low or s_current_state = fetching_addr_high)) 
+                      else '0';
+    s_stack_incr <= '1' when s_opcode = Push or s_branch_condition = JumpToSubroutine else '0';
     
     -- AFTER RESET SYNC
     process(i_clk, i_rst) is
@@ -320,7 +346,11 @@ begin
             if s_current_state = fetching_addr_low then
                 s_addr_new(7 downto 0) <= unsigned(i_data_bus);
             elsif s_current_state = fetching_addr_high then
-                s_addr_new(15 downto 8) <= unsigned(i_data_bus);
+                if s_opcode = Jump and s_branch_condition = JumpToSubroutine then
+                    s_addr_new <= s_pc+1;
+                else
+                    s_addr_new(15 downto 8) <= unsigned(i_data_bus);
+                end if;
             end if;
         end if;
     end process;

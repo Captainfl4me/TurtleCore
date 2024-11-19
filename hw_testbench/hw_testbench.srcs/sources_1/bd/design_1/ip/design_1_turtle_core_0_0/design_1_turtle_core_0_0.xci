@@ -4,7 +4,7 @@
     "xci_name": "design_1_turtle_core_0_0",
     "cell_name": "turtle_core_0",
     "component_reference": "user.org:user:turtle_core:1.1",
-    "ip_revision": "19",
+    "ip_revision": "20",
     "gen_directory": "../../../../../../hw_testbench.gen/sources_1/bd/design_1/ip/design_1_turtle_core_0_0",
     "parameters": {
       "component_parameters": {
@@ -26,7 +26,7 @@
       },
       "runtime_parameters": {
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
-        "IPREVISION": [ { "value": "19" } ],
+        "IPREVISION": [ { "value": "20" } ],
         "MANAGED": [ { "value": "TRUE" } ],
         "OUTPUTDIR": [ { "value": "../../../../../../hw_testbench.gen/sources_1/bd/design_1/ip/design_1_turtle_core_0_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],

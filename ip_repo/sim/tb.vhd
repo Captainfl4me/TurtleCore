@@ -52,8 +52,7 @@ architecture Simulation of tb is
     signal s_addr_bus : std_logic_vector(15 downto 0) := (others => '0');
     
     --constant ROM     : std_logic_vector := x"01AA11AB21AC390500120B01002606470e006614350014";
-    --constant ROM     : std_logic_vector := x"0101060b00803f020000";
-    constant ROM     : std_logic_vector := x"01000b00800bffff09fdff31013642390080563f19000f08001b008009ffff060bffff0f0800";
+    constant ROM     : std_logic_vector := x"01019F060000060b00803f0600aF";
     signal s_ROM_bus : std_logic_vector(7 downto 0);
 begin
     tc_inst: turtle_top_level
@@ -68,7 +67,8 @@ begin
     s_clk <= not s_clk after 10ps;
 
     s_ROM_bus <= ROM(to_integer(unsigned(s_addr_bus))*8 to to_integer(unsigned(s_addr_bus))*8+7) when to_integer(unsigned(s_addr_bus))*8+7 <= ROM'high else 
-                x"01" when s_addr_bus = x"FFFD" else
+                x"05" when s_addr_bus = x"8000" else
+                x"00" when s_addr_bus = x"8001" else
                 (others=>'0');
     s_data_bus <= s_ROM_bus when s_rw ='0' else (others=>'Z');
     process is 

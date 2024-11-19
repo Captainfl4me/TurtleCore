@@ -86,14 +86,16 @@ begin
                  Add        when s_ir(7 downto 4) = "0001" else
                  Increment;
 
-    o_branch_condition <= OverflowFlagSet   when s_ir(7 downto 4) = "1000" else
-                          OverflowFlagClear when s_ir(7 downto 4) = "0111" else
-                          NegativeFlagSet   when s_ir(7 downto 4) = "0110" else
-                          NegativeFlagClear when s_ir(7 downto 4) = "0101" else
-                          ZeroFlagSet       when s_ir(7 downto 4) = "0100" else 
-                          ZeroFlagClear     when s_ir(7 downto 4) = "0011" else 
-                          CarryFlagSet      when s_ir(7 downto 4) = "0010" else 
-                          CarryFlagClear    when s_ir(7 downto 4) = "0001" else
+    o_branch_condition <= ReturnFromSubroutine when s_ir(7 downto 4) = "1010" else
+                          JumpToSubroutine     when s_ir(7 downto 4) = "1001" else
+                          OverflowFlagSet      when s_ir(7 downto 4) = "1000" else
+                          OverflowFlagClear    when s_ir(7 downto 4) = "0111" else
+                          NegativeFlagSet      when s_ir(7 downto 4) = "0110" else
+                          NegativeFlagClear    when s_ir(7 downto 4) = "0101" else
+                          ZeroFlagSet          when s_ir(7 downto 4) = "0100" else 
+                          ZeroFlagClear        when s_ir(7 downto 4) = "0011" else 
+                          CarryFlagSet         when s_ir(7 downto 4) = "0010" else 
+                          CarryFlagClear       when s_ir(7 downto 4) = "0001" else
                           NoCondition;
 
     -- Valid instruction data selecter
