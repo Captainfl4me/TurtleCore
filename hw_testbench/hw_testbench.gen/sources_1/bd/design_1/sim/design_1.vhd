@@ -2,7 +2,7 @@
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
---Date        : Mon Nov 18 23:39:19 2024
+--Date        : Tue Nov 19 11:05:08 2024
 --Host        : GBNicoArch running 64-bit unknown
 --Command     : generate_target design_1.bd
 --Design      : design_1
@@ -19,10 +19,10 @@ entity design_1 is
     rst_btn : in STD_LOGIC;
     sw : in STD_LOGIC_VECTOR ( 15 downto 0 )
   );
-  attribute core_generation_info : string;
-  attribute core_generation_info of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=7,numReposBlks=7,numNonXlnxBlks=1,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,da_board_cnt=2,da_clkrst_cnt=2,synth_mode=None}";
-  attribute hw_handoff : string;
-  attribute hw_handoff of design_1 : entity is "design_1.hwdef";
+  attribute CORE_GENERATION_INFO : string;
+  attribute CORE_GENERATION_INFO of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=7,numReposBlks=7,numNonXlnxBlks=1,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,da_board_cnt=2,da_clkrst_cnt=2,synth_mode=None}";
+  attribute HW_HANDOFF : string;
+  attribute HW_HANDOFF of design_1 : entity is "design_1.hwdef";
 end design_1;
 
 architecture STRUCTURE of design_1 is
@@ -112,16 +112,16 @@ architecture STRUCTURE of design_1 is
   signal turtle_core_0_o_data_bus : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal turtle_core_0_o_rw : STD_LOGIC;
   signal NLW_MCC_0_o_debug_bus_UNCONNECTED : STD_LOGIC_VECTOR ( 7 downto 0 );
-  attribute x_interface_info : string;
-  attribute x_interface_info of clk : signal is "xilinx.com:signal:clock:1.0 CLK.CLK CLK";
-  attribute x_interface_parameter : string;
-  attribute x_interface_parameter of clk : signal is "XIL_INTERFACENAME CLK.CLK, CLK_DOMAIN design_1_clk, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0";
-  attribute x_interface_info of rst_btn : signal is "xilinx.com:signal:reset:1.0 RST.RST_BTN RST";
-  attribute x_interface_parameter of rst_btn : signal is "XIL_INTERFACENAME RST.RST_BTN, INSERT_VIP 0, POLARITY ACTIVE_HIGH";
-  attribute x_interface_info of leds : signal is "xilinx.com:signal:data:1.0 DATA.LEDS DATA";
-  attribute x_interface_parameter of leds : signal is "XIL_INTERFACENAME DATA.LEDS, LAYERED_METADATA undef";
-  attribute x_interface_info of sw : signal is "xilinx.com:signal:data:1.0 DATA.SW DATA";
-  attribute x_interface_parameter of sw : signal is "XIL_INTERFACENAME DATA.SW, LAYERED_METADATA undef";
+  attribute X_INTERFACE_INFO : string;
+  attribute X_INTERFACE_INFO of clk : signal is "xilinx.com:signal:clock:1.0 CLK.CLK CLK";
+  attribute X_INTERFACE_PARAMETER : string;
+  attribute X_INTERFACE_PARAMETER of clk : signal is "XIL_INTERFACENAME CLK.CLK, CLK_DOMAIN design_1_clk, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0";
+  attribute X_INTERFACE_INFO of rst_btn : signal is "xilinx.com:signal:reset:1.0 RST.RST_BTN RST";
+  attribute X_INTERFACE_PARAMETER of rst_btn : signal is "XIL_INTERFACENAME RST.RST_BTN, INSERT_VIP 0, POLARITY ACTIVE_HIGH";
+  attribute X_INTERFACE_INFO of leds : signal is "xilinx.com:signal:data:1.0 DATA.LEDS DATA";
+  attribute X_INTERFACE_PARAMETER of leds : signal is "XIL_INTERFACENAME DATA.LEDS, LAYERED_METADATA undef";
+  attribute X_INTERFACE_INFO of sw : signal is "xilinx.com:signal:data:1.0 DATA.SW DATA";
+  attribute X_INTERFACE_PARAMETER of sw : signal is "XIL_INTERFACENAME DATA.SW, LAYERED_METADATA undef";
 begin
   clk_1 <= clk;
   debounce_rst_Res <= rst_btn;

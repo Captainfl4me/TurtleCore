@@ -58,7 +58,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>e6099cab</spirit:value>
+            <spirit:value>8e94cbb7</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -74,7 +74,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>88532f37</spirit:value>
+            <spirit:value>b311d364</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -227,7 +227,7 @@
       <spirit:file>
         <spirit:name>src/turtle_top_level.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_77cd31cc</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_5e8bf114</spirit:userFileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -303,13 +303,13 @@
       </xilinx:taxonomies>
       <xilinx:displayName>turtle_core_v1_1</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>18</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2024-11-18T22:36:42Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>19</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2024-11-19T10:04:52Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2024.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="d27a626e"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="da58b84d"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="5d654658"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="cb46a685"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="a53f33b7"/>
     </xilinx:packagingInfo>

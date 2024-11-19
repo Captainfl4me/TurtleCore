@@ -105,9 +105,9 @@ architecture RTL of turtle_top_level is
     end component alu;
     signal s_overflow_alu : std_logic := '0';
     signal s_carry_alu    : std_logic := '0';
-    signal s_result   : t_byte := (others => '0');
-    signal s_math_op  : t_math_op := Increment;
-    signal s_alu_rb   : t_byte := (others => '0');    
+    signal s_result       : t_byte := (others => '0');
+    signal s_math_op      : t_math_op := Increment;
+    signal s_alu_rb       : t_byte := (others => '0');    
     
     component counter_register is
         Generic(COUNTER_SIZE: integer);
@@ -121,27 +121,29 @@ architecture RTL of turtle_top_level is
             o_data   : out unsigned(COUNTER_SIZE-1 downto 0)
         );
     end component counter_register;
-    signal s_pc : unsigned(t_addr_byte'range) := (others => '0');
-    signal s_pc_en   : std_logic := '0';
-    signal s_pc_load : std_logic := '0';
-    signal s_pc_in : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_pc         : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_pc_en      : std_logic := '0';
+    signal s_pc_load    : std_logic := '0';
+    signal s_pc_in      : unsigned(t_addr_byte'range) := (others => '0');
     signal s_stack      : unsigned(t_byte'range) := (others => '0');
     signal s_stack_en   : std_logic := '0';
     signal s_stack_incr : std_logic := '0';
 
     type t_cpu_state is (fetching_ir, fetching_addr_low, fetching_addr_high, executing_ir_with_pc, executing_ir_without_pc);
-    signal s_current_state : t_cpu_state := fetching_ir;
+    signal s_current_state          : t_cpu_state := fetching_ir;
     signal s_wait_for_starting_edge : std_logic := '1';
-    signal s_is_loading    : std_logic := '1';
-    signal s_is_exec       : std_logic := '0';
-    signal s_addr          : unsigned(t_addr_byte'range) := (others => '0');
-    signal s_addr_new      : unsigned(t_addr_byte'range) := (others => '0');
-    signal s_overflow : std_logic := '0';
-    signal s_carry    : std_logic := '0';
-    signal s_zero     : std_logic := '0';
-    signal s_negative : std_logic := '0';
-    signal s_should_jump : std_logic := '0';
-    signal s_halt     : std_logic := '0';
+    signal s_is_loading             : std_logic := '1';
+    signal s_is_exec                : std_logic := '0';
+    signal s_addr                   : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_addr_new               : unsigned(t_addr_byte'range) := (others => '0');
+    signal s_should_jump            : std_logic := '0';
+    signal s_halt                   : std_logic := '0';
+    
+    -- FLAGS
+    signal s_overflow               : std_logic := '0';
+    signal s_carry                  : std_logic := '0';
+    signal s_zero                   : std_logic := '0';
+    signal s_negative               : std_logic := '0';
 begin
     reg_instruction : instruction_register
         port map (
@@ -161,7 +163,7 @@ begin
     o_data_bus <= s_reg_file_data_out(s_reg1) when s_current_state = executing_ir_without_pc and (s_opcode = Store or s_opcode = Push) else
                    (others => 'Z');
     o_rw <= '1' when s_current_state = executing_ir_without_pc and (s_opcode = Store or s_opcode = Push) else '0';
-    s_halt <= '1' when s_wait_for_starting_edge='0' and s_opcode=Break else '0';
+    s_halt <= '1' when s_wait_for_starting_edge = '0' and s_opcode=Break else '0';
     
     s_reg_file_load <= '1' when (s_opcode = Load or s_opcode = Transfer or s_opcode = Math or s_opcode = Pull) and s_is_loading = '0' and s_is_exec = '1' else '0';
     s_reg_file_data_in <= i_data_bus when s_opcode = Load or s_opcode = Pull else
@@ -239,31 +241,32 @@ begin
             s_addr <= (others => '0');
         elsif falling_edge(i_clk) and s_wait_for_starting_edge='0' and s_halt = '0' then
             s_addr <= s_pc;
-            if s_current_state = fetching_ir then
-                if s_addr_mode = relative or s_opcode = Jump then
-                    s_current_state <= fetching_addr_low;
-                elsif s_opcode = Transfer or s_opcode = Push or s_opcode = Pull or s_opcode = Math then
-                    s_current_state <= executing_ir_without_pc;
-                    if s_opcode = Push then
-                        s_addr <= x"00" & s_stack;
-                    elsif s_opcode = Pull then
-                        s_addr <= x"00" & (s_stack - 1);
+            case s_current_state is
+                when fetching_ir =>
+                    if s_addr_mode = relative or s_opcode = Jump then
+                        s_current_state <= fetching_addr_low;
+                    elsif s_opcode = Transfer or s_opcode = Push or s_opcode = Pull or s_opcode = Math then
+                        s_current_state <= executing_ir_without_pc;
+                        if s_opcode = Push then
+                            s_addr <= x"80" & s_stack;
+                        elsif s_opcode = Pull then
+                            s_addr <= x"80" & (s_stack - 1);
+                        end if;
+                    else
+                        s_current_state <= executing_ir_with_pc;
                     end if;
-                else
-                    s_current_state <= executing_ir_with_pc;
-                end if;
-            elsif s_current_state = fetching_addr_low then
-                s_current_state <= fetching_addr_high;      
-            elsif s_current_state = fetching_addr_high then
-                if s_opcode = Jump then
+                when fetching_addr_low =>
+                    s_current_state <= fetching_addr_high;    
+                when fetching_addr_high =>
+                    if s_opcode = Jump then
+                        s_current_state <= fetching_ir;
+                    else
+                        s_current_state <= executing_ir_without_pc;
+                        s_addr <= s_addr_new;
+                    end if;
+                when others =>
                     s_current_state <= fetching_ir;
-                else
-                    s_current_state <= executing_ir_without_pc;
-                    s_addr <= s_addr_new;
-                end if;
-            else
-                s_current_state <= fetching_ir;
-            end if;
+                end case;
         end if;
     end process;
                       
