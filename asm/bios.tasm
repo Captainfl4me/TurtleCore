@@ -1,2 +1,6 @@
-; .define addr_switch_bar_low $FFFD
-; .define addr_switch_bar_high $FFFC
+; ADDR PERIPH MAP
+.label led_bar_low $FFFF
+.label led_bar_high $FFFE
+
+.label switch_bar_low $FFFD
+.label switch_bar_high $FFFC
