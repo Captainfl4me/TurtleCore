@@ -40,10 +40,10 @@ As the adress bus of the CPU is a 16-bits bus we can access 65537 space of 8-bit
 
 Addresses | Type | Total space
 -- | -- | --
-$0000 - $00FF | Program stack, store on RAM chip | 256B
-$0100 - $7EFF | RAM | 32,256B
-$7F00 - $7FFF | IO | 256B
-$8000 - $FFFF | ROM | 32,768B
+$0000 - $7FFF | ROM | 32,768B
+$8000 - $80FF | Program stack, store on RAM chip | 256B
+$8100 - $FEFF | RAM | 32,256B
+$FF00 - $FFFF | IO | 256B
 
 ## Tools
 
