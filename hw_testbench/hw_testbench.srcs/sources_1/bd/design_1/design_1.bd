@@ -16,7 +16,6 @@
       "blk_mem_gen_0": "",
       "MCC_0": "",
       "dist_mem_gen_0": "",
-      "led_bar_0": "",
       "util_vector_logic_0": ""
     },
     "ports": {
@@ -220,6 +219,38 @@
           "boundary_crc": "0x0"
         },
         "ports": {
+          "i_clk": {
+            "type": "clk",
+            "direction": "I",
+            "parameters": {
+              "ASSOCIATED_RESET": {
+                "value": "i_rstn",
+                "value_src": "constant"
+              },
+              "FREQ_HZ": {
+                "value": "50000000",
+                "value_src": "ip_prop"
+              },
+              "PHASE": {
+                "value": "0.0",
+                "value_src": "ip_prop"
+              },
+              "CLK_DOMAIN": {
+                "value": "/clk_wiz_clk_out1",
+                "value_src": "ip_prop"
+              }
+            }
+          },
+          "i_rstn": {
+            "type": "rst",
+            "direction": "I",
+            "parameters": {
+              "POLARITY": {
+                "value": "ACTIVE_LOW",
+                "value_src": "constant"
+              }
+            }
+          },
           "i_rw": {
             "direction": "I"
           },
@@ -241,11 +272,6 @@
           "i_data_ROM": {
             "direction": "I",
             "left": "7",
-            "right": "0"
-          },
-          "i_led_bar": {
-            "direction": "I",
-            "left": "15",
             "right": "0"
           },
           "i_switch_bar": {
@@ -282,13 +308,10 @@
           "o_write_RAM": {
             "direction": "O"
           },
-          "o_addr_led_bar": {
+          "o_led_bar": {
             "direction": "O",
-            "left": "0",
+            "left": "15",
             "right": "0"
-          },
-          "o_write_led_bar": {
-            "direction": "O"
           },
           "o_addr_ROM": {
             "direction": "O",
@@ -324,70 +347,6 @@
           }
         }
       },
-      "led_bar_0": {
-        "vlnv": "xilinx.com:module_ref:led_bar:1.0",
-        "ip_revision": "1",
-        "xci_name": "design_1_led_bar_0_0",
-        "xci_path": "ip/design_1_led_bar_0_0/design_1_led_bar_0_0.xci",
-        "inst_hier_path": "led_bar_0",
-        "reference_info": {
-          "ref_type": "hdl",
-          "ref_name": "led_bar",
-          "boundary_crc": "0x0"
-        },
-        "ports": {
-          "i_rw": {
-            "direction": "I"
-          },
-          "i_rst": {
-            "type": "rst",
-            "direction": "I",
-            "parameters": {
-              "POLARITY": {
-                "value": "ACTIVE_LOW",
-                "value_src": "ip_prop"
-              }
-            }
-          },
-          "i_clk": {
-            "type": "clk",
-            "direction": "I",
-            "parameters": {
-              "ASSOCIATED_RESET": {
-                "value": "i_rst",
-                "value_src": "constant"
-              },
-              "FREQ_HZ": {
-                "value": "50000000",
-                "value_src": "ip_prop"
-              },
-              "PHASE": {
-                "value": "0.0",
-                "value_src": "ip_prop"
-              },
-              "CLK_DOMAIN": {
-                "value": "/clk_wiz_clk_out1",
-                "value_src": "ip_prop"
-              }
-            }
-          },
-          "i_addr": {
-            "direction": "I",
-            "left": "0",
-            "right": "0"
-          },
-          "i_data": {
-            "direction": "I",
-            "left": "7",
-            "right": "0"
-          },
-          "o_leds": {
-            "direction": "O",
-            "left": "15",
-            "right": "0"
-          }
-        }
-      },
       "util_vector_logic_0": {
         "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
         "ip_revision": "4",
@@ -417,17 +376,16 @@
           "dist_mem_gen_0/a"
         ]
       },
-      "MCC_0_o_addr_led_bar": {
-        "ports": [
-          "MCC_0/o_addr_led_bar",
-          "led_bar_0/i_addr"
-        ]
-      },
       "MCC_0_o_data": {
         "ports": [
           "MCC_0/o_data",
-          "blk_mem_gen_0/dina",
-          "led_bar_0/i_data"
+          "blk_mem_gen_0/dina"
+        ]
+      },
+      "MCC_0_o_led_bar": {
+        "ports": [
+          "MCC_0/o_led_bar",
+          "leds"
         ]
       },
       "MCC_0_o_read_cpu_bus": {
@@ -440,12 +398,6 @@
         "ports": [
           "MCC_0/o_write_RAM",
           "blk_mem_gen_0/wea"
-        ]
-      },
-      "MCC_0_o_write_led_bar": {
-        "ports": [
-          "MCC_0/o_write_led_bar",
-          "led_bar_0/i_rw"
         ]
       },
       "blk_mem_gen_0_douta": {
@@ -464,8 +416,8 @@
         "ports": [
           "clk_wiz/clk_out1",
           "blk_mem_gen_0/clka",
-          "led_bar_0/i_clk",
-          "turtle_core_0/i_clk"
+          "turtle_core_0/i_clk",
+          "MCC_0/i_clk"
         ]
       },
       "debounce_rst_Res": {
@@ -481,18 +433,11 @@
           "MCC_0/i_data_ROM"
         ]
       },
-      "led_bar_0_o_leds": {
-        "ports": [
-          "led_bar_0/o_leds",
-          "leds",
-          "MCC_0/i_led_bar"
-        ]
-      },
       "proc_sys_reset_0_peripheral_aresetn": {
         "ports": [
           "util_vector_logic_0/Res",
-          "led_bar_0/i_rst",
-          "turtle_core_0/i_rst"
+          "turtle_core_0/i_rst",
+          "MCC_0/i_rstn"
         ]
       },
       "sw_1": {
