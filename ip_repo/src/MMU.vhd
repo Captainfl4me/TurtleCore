@@ -21,7 +21,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity MCC is
+entity MMU is
     Port (
         i_clk           : in std_logic;
         i_rstn          : in std_logic;
@@ -43,9 +43,9 @@ entity MCC is
         -- ROM
         o_addr_ROM      : out std_logic_vector(14 downto 0)
     );
-end MCC;
+end MMU;
 
-architecture RTL of MCC is
+architecture RTL of MMU is
     signal s_cpu_read_bus: std_logic_vector(7 downto 0);
     
     -- LED

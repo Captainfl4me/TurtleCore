@@ -2,7 +2,7 @@
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
---Date        : Tue Dec 10 16:55:51 2024
+--Date        : Sun Jan 12 23:08:23 2025
 --Host        : GBNicoArch running 64-bit unknown
 --Command     : generate_target design_1.bd
 --Design      : design_1
@@ -20,7 +20,7 @@ entity design_1 is
     sw : in STD_LOGIC_VECTOR ( 15 downto 0 )
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=6,numReposBlks=6,numNonXlnxBlks=1,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_board_cnt=2,da_clkrst_cnt=2,synth_mode=None}";
+  attribute CORE_GENERATION_INFO of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=4,numReposBlks=4,numNonXlnxBlks=1,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,da_board_cnt=2,da_clkrst_cnt=2,synth_mode=None}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of design_1 : entity is "design_1.hwdef";
 end design_1;
@@ -28,12 +28,12 @@ end design_1;
 architecture STRUCTURE of design_1 is
   component design_1_turtle_core_0_0 is
   port (
-    i_clk : in STD_LOGIC;
-    i_rst : in STD_LOGIC;
-    i_data_bus : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    o_data_bus : out STD_LOGIC_VECTOR ( 7 downto 0 );
-    o_rw : out STD_LOGIC;
-    o_addr_bus : out STD_LOGIC_VECTOR ( 15 downto 0 )
+    clk_50MHz : in STD_LOGIC;
+    input_ROM_bus : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    input_pin : in STD_LOGIC_VECTOR ( 15 downto 0 );
+    output_ROM_addr : out STD_LOGIC_VECTOR ( 14 downto 0 );
+    output_pin : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    reset_rtl_0 : in STD_LOGIC
   );
   end component design_1_turtle_core_0_0;
   component design_1_clk_wiz_0 is
@@ -43,34 +43,6 @@ architecture STRUCTURE of design_1 is
     clk_out1 : out STD_LOGIC
   );
   end component design_1_clk_wiz_0;
-  component design_1_blk_mem_gen_0_0 is
-  port (
-    clka : in STD_LOGIC;
-    wea : in STD_LOGIC_VECTOR ( 0 to 0 );
-    addra : in STD_LOGIC_VECTOR ( 14 downto 0 );
-    dina : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    douta : out STD_LOGIC_VECTOR ( 7 downto 0 )
-  );
-  end component design_1_blk_mem_gen_0_0;
-  component design_1_MCC_0_0 is
-  port (
-    i_clk : in STD_LOGIC;
-    i_rstn : in STD_LOGIC;
-    i_rw : in STD_LOGIC;
-    i_write_cpu_bus : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    i_addr_bus : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    i_data_RAM : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    i_data_ROM : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    i_switch_bar : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    o_debug_bus : out STD_LOGIC_VECTOR ( 7 downto 0 );
-    o_read_cpu_bus : out STD_LOGIC_VECTOR ( 7 downto 0 );
-    o_data : out STD_LOGIC_VECTOR ( 7 downto 0 );
-    o_addr_RAM : out STD_LOGIC_VECTOR ( 14 downto 0 );
-    o_write_RAM : out STD_LOGIC;
-    o_led_bar : out STD_LOGIC_VECTOR ( 15 downto 0 );
-    o_addr_ROM : out STD_LOGIC_VECTOR ( 14 downto 0 )
-  );
-  end component design_1_MCC_0_0;
   component design_1_dist_mem_gen_0_1 is
   port (
     a : in STD_LOGIC_VECTOR ( 14 downto 0 );
@@ -83,23 +55,14 @@ architecture STRUCTURE of design_1 is
     Res : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   end component design_1_util_vector_logic_0_0;
-  signal MCC_0_o_addr_RAM : STD_LOGIC_VECTOR ( 14 downto 0 );
-  signal MCC_0_o_addr_ROM : STD_LOGIC_VECTOR ( 14 downto 0 );
-  signal MCC_0_o_data : STD_LOGIC_VECTOR ( 7 downto 0 );
-  signal MCC_0_o_led_bar : STD_LOGIC_VECTOR ( 15 downto 0 );
-  signal MCC_0_o_read_cpu_bus : STD_LOGIC_VECTOR ( 7 downto 0 );
-  signal MCC_0_o_write_RAM : STD_LOGIC;
-  signal blk_mem_gen_0_douta : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal clk_1 : STD_LOGIC;
   signal debounce_clk_Res : STD_LOGIC;
   signal debounce_rst_Res : STD_LOGIC;
   signal dist_mem_gen_0_spo : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal proc_sys_reset_0_peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
   signal sw_1 : STD_LOGIC_VECTOR ( 15 downto 0 );
-  signal turtle_core_0_o_addr_bus : STD_LOGIC_VECTOR ( 15 downto 0 );
-  signal turtle_core_0_o_data_bus : STD_LOGIC_VECTOR ( 7 downto 0 );
-  signal turtle_core_0_o_rw : STD_LOGIC;
-  signal NLW_MCC_0_o_debug_bus_UNCONNECTED : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal turtle_core_0_output_ROM_addr : STD_LOGIC_VECTOR ( 14 downto 0 );
+  signal turtle_core_0_output_pin : STD_LOGIC_VECTOR ( 15 downto 0 );
   attribute X_INTERFACE_INFO : string;
   attribute X_INTERFACE_INFO of clk : signal is "xilinx.com:signal:clock:1.0 CLK.CLK CLK";
   attribute X_INTERFACE_PARAMETER : string;
@@ -113,34 +76,8 @@ architecture STRUCTURE of design_1 is
 begin
   clk_1 <= clk;
   debounce_rst_Res <= rst_btn;
-  leds(15 downto 0) <= MCC_0_o_led_bar(15 downto 0);
+  leds(15 downto 0) <= turtle_core_0_output_pin(15 downto 0);
   sw_1(15 downto 0) <= sw(15 downto 0);
-MCC_0: component design_1_MCC_0_0
-     port map (
-      i_addr_bus(15 downto 0) => turtle_core_0_o_addr_bus(15 downto 0),
-      i_clk => debounce_clk_Res,
-      i_data_RAM(7 downto 0) => blk_mem_gen_0_douta(7 downto 0),
-      i_data_ROM(7 downto 0) => dist_mem_gen_0_spo(7 downto 0),
-      i_rstn => proc_sys_reset_0_peripheral_aresetn(0),
-      i_rw => turtle_core_0_o_rw,
-      i_switch_bar(15 downto 0) => sw_1(15 downto 0),
-      i_write_cpu_bus(7 downto 0) => turtle_core_0_o_data_bus(7 downto 0),
-      o_addr_RAM(14 downto 0) => MCC_0_o_addr_RAM(14 downto 0),
-      o_addr_ROM(14 downto 0) => MCC_0_o_addr_ROM(14 downto 0),
-      o_data(7 downto 0) => MCC_0_o_data(7 downto 0),
-      o_debug_bus(7 downto 0) => NLW_MCC_0_o_debug_bus_UNCONNECTED(7 downto 0),
-      o_led_bar(15 downto 0) => MCC_0_o_led_bar(15 downto 0),
-      o_read_cpu_bus(7 downto 0) => MCC_0_o_read_cpu_bus(7 downto 0),
-      o_write_RAM => MCC_0_o_write_RAM
-    );
-blk_mem_gen_0: component design_1_blk_mem_gen_0_0
-     port map (
-      addra(14 downto 0) => MCC_0_o_addr_RAM(14 downto 0),
-      clka => debounce_clk_Res,
-      dina(7 downto 0) => MCC_0_o_data(7 downto 0),
-      douta(7 downto 0) => blk_mem_gen_0_douta(7 downto 0),
-      wea(0) => MCC_0_o_write_RAM
-    );
 clk_wiz: component design_1_clk_wiz_0
      port map (
       clk_in1 => clk_1,
@@ -149,17 +86,17 @@ clk_wiz: component design_1_clk_wiz_0
     );
 dist_mem_gen_0: component design_1_dist_mem_gen_0_1
      port map (
-      a(14 downto 0) => MCC_0_o_addr_ROM(14 downto 0),
+      a(14 downto 0) => turtle_core_0_output_ROM_addr(14 downto 0),
       spo(7 downto 0) => dist_mem_gen_0_spo(7 downto 0)
     );
 turtle_core_0: component design_1_turtle_core_0_0
      port map (
-      i_clk => debounce_clk_Res,
-      i_data_bus(7 downto 0) => MCC_0_o_read_cpu_bus(7 downto 0),
-      i_rst => proc_sys_reset_0_peripheral_aresetn(0),
-      o_addr_bus(15 downto 0) => turtle_core_0_o_addr_bus(15 downto 0),
-      o_data_bus(7 downto 0) => turtle_core_0_o_data_bus(7 downto 0),
-      o_rw => turtle_core_0_o_rw
+      clk_50MHz => debounce_clk_Res,
+      input_ROM_bus(7 downto 0) => dist_mem_gen_0_spo(7 downto 0),
+      input_pin(15 downto 0) => sw_1(15 downto 0),
+      output_ROM_addr(14 downto 0) => turtle_core_0_output_ROM_addr(14 downto 0),
+      output_pin(15 downto 0) => turtle_core_0_output_pin(15 downto 0),
+      reset_rtl_0 => proc_sys_reset_0_peripheral_aresetn(0)
     );
 util_vector_logic_0: component design_1_util_vector_logic_0_0
      port map (

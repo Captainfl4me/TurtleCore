@@ -13,8 +13,6 @@
     "design_tree": {
       "turtle_core_0": "",
       "clk_wiz": "",
-      "blk_mem_gen_0": "",
-      "MCC_0": "",
       "dist_mem_gen_0": "",
       "util_vector_logic_0": ""
     },
@@ -85,7 +83,7 @@
     "components": {
       "turtle_core_0": {
         "vlnv": "user.org:user:turtle_core:1.1",
-        "ip_revision": "20",
+        "ip_revision": "25",
         "xci_name": "design_1_turtle_core_0_0",
         "xci_path": "ip/design_1_turtle_core_0_0/design_1_turtle_core_0_0.xci",
         "inst_hier_path": "turtle_core_0"
@@ -165,161 +163,6 @@
           }
         }
       },
-      "blk_mem_gen_0": {
-        "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-        "ip_revision": "8",
-        "xci_name": "design_1_blk_mem_gen_0_0",
-        "xci_path": "ip/design_1_blk_mem_gen_0_0/design_1_blk_mem_gen_0_0.xci",
-        "inst_hier_path": "blk_mem_gen_0",
-        "parameters": {
-          "Enable_A": {
-            "value": "Always_Enabled"
-          },
-          "Fill_Remaining_Memory_Locations": {
-            "value": "true"
-          },
-          "Load_Init_File": {
-            "value": "false"
-          },
-          "Memory_Type": {
-            "value": "Single_Port_RAM"
-          },
-          "Operating_Mode_A": {
-            "value": "WRITE_FIRST"
-          },
-          "Read_Width_A": {
-            "value": "8"
-          },
-          "Register_PortA_Output_of_Memory_Primitives": {
-            "value": "false"
-          },
-          "Use_RSTA_Pin": {
-            "value": "false"
-          },
-          "Write_Depth_A": {
-            "value": "32768"
-          },
-          "Write_Width_A": {
-            "value": "8"
-          },
-          "use_bram_block": {
-            "value": "Stand_Alone"
-          }
-        }
-      },
-      "MCC_0": {
-        "vlnv": "xilinx.com:module_ref:MCC:1.0",
-        "ip_revision": "1",
-        "xci_name": "design_1_MCC_0_0",
-        "xci_path": "ip/design_1_MCC_0_0/design_1_MCC_0_0.xci",
-        "inst_hier_path": "MCC_0",
-        "reference_info": {
-          "ref_type": "hdl",
-          "ref_name": "MCC",
-          "boundary_crc": "0x0"
-        },
-        "ports": {
-          "i_clk": {
-            "type": "clk",
-            "direction": "I",
-            "parameters": {
-              "ASSOCIATED_RESET": {
-                "value": "i_rstn",
-                "value_src": "constant"
-              },
-              "FREQ_HZ": {
-                "value": "50000000",
-                "value_src": "ip_prop"
-              },
-              "PHASE": {
-                "value": "0.0",
-                "value_src": "ip_prop"
-              },
-              "CLK_DOMAIN": {
-                "value": "/clk_wiz_clk_out1",
-                "value_src": "ip_prop"
-              }
-            }
-          },
-          "i_rstn": {
-            "type": "rst",
-            "direction": "I",
-            "parameters": {
-              "POLARITY": {
-                "value": "ACTIVE_LOW",
-                "value_src": "constant"
-              }
-            }
-          },
-          "i_rw": {
-            "direction": "I"
-          },
-          "i_write_cpu_bus": {
-            "direction": "I",
-            "left": "7",
-            "right": "0"
-          },
-          "i_addr_bus": {
-            "direction": "I",
-            "left": "15",
-            "right": "0"
-          },
-          "i_data_RAM": {
-            "direction": "I",
-            "left": "7",
-            "right": "0"
-          },
-          "i_data_ROM": {
-            "direction": "I",
-            "left": "7",
-            "right": "0"
-          },
-          "i_switch_bar": {
-            "direction": "I",
-            "left": "15",
-            "right": "0",
-            "parameters": {
-              "LAYERED_METADATA": {
-                "value": "undef",
-                "value_src": "default_prop"
-              }
-            }
-          },
-          "o_debug_bus": {
-            "direction": "O",
-            "left": "7",
-            "right": "0"
-          },
-          "o_read_cpu_bus": {
-            "direction": "O",
-            "left": "7",
-            "right": "0"
-          },
-          "o_data": {
-            "direction": "O",
-            "left": "7",
-            "right": "0"
-          },
-          "o_addr_RAM": {
-            "direction": "O",
-            "left": "14",
-            "right": "0"
-          },
-          "o_write_RAM": {
-            "direction": "O"
-          },
-          "o_led_bar": {
-            "direction": "O",
-            "left": "15",
-            "right": "0"
-          },
-          "o_addr_ROM": {
-            "direction": "O",
-            "left": "14",
-            "right": "0"
-          }
-        }
-      },
       "dist_mem_gen_0": {
         "vlnv": "xilinx.com:ip:dist_mem_gen:8.0",
         "ip_revision": "15",
@@ -364,48 +207,6 @@
       }
     },
     "nets": {
-      "MCC_0_o_addr_RAM": {
-        "ports": [
-          "MCC_0/o_addr_RAM",
-          "blk_mem_gen_0/addra"
-        ]
-      },
-      "MCC_0_o_addr_ROM": {
-        "ports": [
-          "MCC_0/o_addr_ROM",
-          "dist_mem_gen_0/a"
-        ]
-      },
-      "MCC_0_o_data": {
-        "ports": [
-          "MCC_0/o_data",
-          "blk_mem_gen_0/dina"
-        ]
-      },
-      "MCC_0_o_led_bar": {
-        "ports": [
-          "MCC_0/o_led_bar",
-          "leds"
-        ]
-      },
-      "MCC_0_o_read_cpu_bus": {
-        "ports": [
-          "MCC_0/o_read_cpu_bus",
-          "turtle_core_0/i_data_bus"
-        ]
-      },
-      "MCC_0_o_write_RAM": {
-        "ports": [
-          "MCC_0/o_write_RAM",
-          "blk_mem_gen_0/wea"
-        ]
-      },
-      "blk_mem_gen_0_douta": {
-        "ports": [
-          "blk_mem_gen_0/douta",
-          "MCC_0/i_data_RAM"
-        ]
-      },
       "clk_1": {
         "ports": [
           "clk",
@@ -415,9 +216,7 @@
       "debounce_clk_Res": {
         "ports": [
           "clk_wiz/clk_out1",
-          "blk_mem_gen_0/clka",
-          "turtle_core_0/i_clk",
-          "MCC_0/i_clk"
+          "turtle_core_0/clk_50MHz"
         ]
       },
       "debounce_rst_Res": {
@@ -430,38 +229,31 @@
       "dist_mem_gen_0_spo": {
         "ports": [
           "dist_mem_gen_0/spo",
-          "MCC_0/i_data_ROM"
+          "turtle_core_0/input_ROM_bus"
         ]
       },
       "proc_sys_reset_0_peripheral_aresetn": {
         "ports": [
           "util_vector_logic_0/Res",
-          "turtle_core_0/i_rst",
-          "MCC_0/i_rstn"
+          "turtle_core_0/reset_rtl_0"
         ]
       },
       "sw_1": {
         "ports": [
           "sw",
-          "MCC_0/i_switch_bar"
+          "turtle_core_0/input_pin"
         ]
       },
-      "turtle_core_0_o_addr_bus": {
+      "turtle_core_0_output_ROM_addr": {
         "ports": [
-          "turtle_core_0/o_addr_bus",
-          "MCC_0/i_addr_bus"
+          "turtle_core_0/output_ROM_addr",
+          "dist_mem_gen_0/a"
         ]
       },
-      "turtle_core_0_o_data_bus": {
+      "turtle_core_0_output_pin": {
         "ports": [
-          "turtle_core_0/o_data_bus",
-          "MCC_0/i_write_cpu_bus"
-        ]
-      },
-      "turtle_core_0_o_rw": {
-        "ports": [
-          "turtle_core_0/o_rw",
-          "MCC_0/i_rw"
+          "turtle_core_0/output_pin",
+          "leds"
         ]
       }
     }
