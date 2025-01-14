@@ -4,7 +4,7 @@
     "xci_name": "design_1_turtle_core_0_0",
     "cell_name": "turtle_core_0",
     "component_reference": "user.org:user:turtle_core:1.1",
-    "ip_revision": "25",
+    "ip_revision": "29",
     "gen_directory": "../../../../../../hw_testbench.gen/sources_1/bd/design_1/ip/design_1_turtle_core_0_0",
     "parameters": {
       "component_parameters": {
@@ -26,7 +26,7 @@
       },
       "runtime_parameters": {
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
-        "IPREVISION": [ { "value": "25" } ],
+        "IPREVISION": [ { "value": "29" } ],
         "MANAGED": [ { "value": "TRUE" } ],
         "OUTPUTDIR": [ { "value": "../../../../../../hw_testbench.gen/sources_1/bd/design_1/ip/design_1_turtle_core_0_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
@@ -39,9 +39,9 @@
       "ports": {
         "clk_50MHz": [ { "direction": "in" } ],
         "input_ROM_bus": [ { "direction": "in", "size_left": "7", "size_right": "0" } ],
-        "input_pin": [ { "direction": "in", "size_left": "15", "size_right": "0" } ],
+        "input_pins": [ { "direction": "in", "size_left": "15", "size_right": "0" } ],
         "output_ROM_addr": [ { "direction": "out", "size_left": "14", "size_right": "0" } ],
-        "output_pin": [ { "direction": "out", "size_left": "15", "size_right": "0" } ],
+        "output_pins": [ { "direction": "out", "size_left": "15", "size_right": "0" } ],
         "reset_rtl_0": [ { "direction": "in" } ]
       },
       "interfaces": {

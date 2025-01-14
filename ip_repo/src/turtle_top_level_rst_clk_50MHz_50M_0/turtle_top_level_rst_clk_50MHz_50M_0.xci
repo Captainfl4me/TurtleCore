@@ -5,7 +5,7 @@
     "cell_name": "rst_clk_50MHz_50M",
     "component_reference": "xilinx.com:ip:proc_sys_reset:5.0",
     "ip_revision": "15",
-    "gen_directory": "../../../../../../turtle_core_v1_1_project.gen/sources_1/bd/turtle_top_level/ip/turtle_top_level_rst_clk_50MHz_50M_0",
+    "gen_directory": "../../../hw_testbench/hw_testbench.tmp/turtle_core_v1_1_project/turtle_core_v1_1_project.gen/sources_1/ip/turtle_top_level_rst_clk_50MHz_50M_0",
     "parameters": {
       "component_parameters": {
         "C_NUM_PERP_ARESETN": [ { "value": "1", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -49,11 +49,11 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "15" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../turtle_core_v1_1_project.gen/sources_1/bd/turtle_top_level/ip/turtle_top_level_rst_clk_50MHz_50M_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../hw_testbench/hw_testbench.tmp/turtle_core_v1_1_project/turtle_core_v1_1_project.gen/sources_1/ip/turtle_top_level_rst_clk_50MHz_50M_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2024.1" } ],
-        "SYNTHESISFLOW": [ { "value": "OUT_OF_CONTEXT" } ]
+        "SYNTHESISFLOW": [ { "value": "GLOBAL" } ]
       }
     },
     "boundary": {
@@ -76,7 +76,7 @@
           "mode": "slave",
           "parameters": {
             "ASSOCIATED_RESET": [ { "value": "mb_reset:bus_struct_reset:interconnect_aresetn:peripheral_aresetn:peripheral_reset", "value_src": "constant", "value_permission": "bd", "usage": "all" } ],
-            "FREQ_HZ": [ { "value": "50000000", "value_src": "user_prop", "value_permission": "bd", "resolve_type": "user", "format": "long", "usage": "all" } ],
+            "FREQ_HZ": [ { "value": "50000000", "value_permission": "bd", "resolve_type": "user", "format": "long", "usage": "all" } ],
             "FREQ_TOLERANCE_HZ": [ { "value": "0", "value_permission": "bd", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "PHASE": [ { "value": "0.0", "value_permission": "bd", "resolve_type": "generated", "format": "float", "is_ips_inferred": true, "is_static_object": false } ],
             "CLK_DOMAIN": [ { "value": "turtle_top_level_clk_50MHz", "value_src": "default_prop", "value_permission": "bd", "resolve_type": "generated", "is_ips_inferred": true, "is_static_object": false } ],
@@ -94,7 +94,7 @@
           "mode": "slave",
           "parameters": {
             "BOARD.ASSOCIATED_PARAM": [ { "value": "RESET_BOARD_INTERFACE", "value_src": "constant", "value_permission": "bd", "usage": "all" } ],
-            "POLARITY": [ { "value": "ACTIVE_HIGH", "value_src": "user_prop", "value_permission": "bd", "resolve_type": "generated", "is_ips_inferred": true, "is_static_object": false } ],
+            "POLARITY": [ { "value": "ACTIVE_HIGH", "value_permission": "bd", "resolve_type": "generated", "is_ips_inferred": true, "is_static_object": false } ],
             "INSERT_VIP": [ { "value": "0", "resolve_type": "user", "format": "long", "usage": "simulation.rtl", "is_ips_inferred": true, "is_static_object": false } ]
           },
           "port_maps": {

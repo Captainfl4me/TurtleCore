@@ -33,7 +33,7 @@ entity tb is
 end tb;
 
 architecture Simulation of tb is
-    component turtle_top_level is
+    component turtle_processing_unit is
         Port (
             i_clk       : in std_logic;
             i_rst       : in std_logic;
@@ -42,7 +42,7 @@ architecture Simulation of tb is
             o_rw        : out std_logic;
             o_addr_bus  : out std_logic_vector(15 downto 0)
         );
-    end component turtle_top_level;
+    end component turtle_processing_unit;
     
     signal s_clk: std_logic := '0';
     signal s_rst: std_logic := '0';
@@ -55,7 +55,7 @@ architecture Simulation of tb is
     constant ROM     : std_logic_vector := x"0101060b00803f020000";
     signal s_ROM_bus : std_logic_vector(7 downto 0);
 begin
-    tc_inst: turtle_top_level
+    tc_inst: turtle_processing_unit
         Port map (
             i_clk       => s_clk,
             i_rst       => s_rst,

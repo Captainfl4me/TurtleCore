@@ -92,16 +92,13 @@
   <FileSets Version="1" Minor="32">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
       <Filter Type="Srcs"/>
-      <File Path="$PPRDIR/../ip_repo/component.xml">
-        <FileInfo SFType="IPXACT"/>
-      </File>
-      <File Path="$PPRDIR/../ip_repo/src/counter_register.vhd">
+      <File Path="$PPRDIR/../ip_repo/src/alu.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../ip_repo/src/alu.vhd">
+      <File Path="$PPRDIR/../ip_repo/src/counter_register.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -119,7 +116,23 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../ip_repo/src/turtle_top_level.vhd">
+      <File Path="$PPRDIR/../ip_repo/src/turtle_processing_unit.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../ip_repo/src/turtle_top_level/turtle_top_level.bd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../ip_repo/component.xml">
+        <FileInfo SFType="IPXACT"/>
+      </File>
+      <File Path="$PPRDIR/../ip_repo/src/turtle_top_level/hdl/turtle_top_level_wrapper.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -127,7 +140,7 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="turtle_top_level"/>
+        <Option Name="TopModule" Val="turtle_top_level_wrapper"/>
       </Config>
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">
@@ -146,11 +159,6 @@
     <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1" RelGenDir="$PGENDIR/sim_1">
       <Filter Type="Srcs"/>
       <File Path="$PPRDIR/../ip_repo/src/tb_behav.wcfg">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../ip_repo/src/tb.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>

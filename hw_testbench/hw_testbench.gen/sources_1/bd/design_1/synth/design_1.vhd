@@ -2,7 +2,7 @@
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
---Date        : Sun Jan 12 23:08:23 2025
+--Date        : Tue Jan 14 11:59:19 2025
 --Host        : GBNicoArch running 64-bit unknown
 --Command     : generate_target design_1.bd
 --Design      : design_1
@@ -30,9 +30,9 @@ architecture STRUCTURE of design_1 is
   port (
     clk_50MHz : in STD_LOGIC;
     input_ROM_bus : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    input_pin : in STD_LOGIC_VECTOR ( 15 downto 0 );
+    input_pins : in STD_LOGIC_VECTOR ( 15 downto 0 );
     output_ROM_addr : out STD_LOGIC_VECTOR ( 14 downto 0 );
-    output_pin : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    output_pins : out STD_LOGIC_VECTOR ( 15 downto 0 );
     reset_rtl_0 : in STD_LOGIC
   );
   end component design_1_turtle_core_0_0;
@@ -62,7 +62,7 @@ architecture STRUCTURE of design_1 is
   signal proc_sys_reset_0_peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
   signal sw_1 : STD_LOGIC_VECTOR ( 15 downto 0 );
   signal turtle_core_0_output_ROM_addr : STD_LOGIC_VECTOR ( 14 downto 0 );
-  signal turtle_core_0_output_pin : STD_LOGIC_VECTOR ( 15 downto 0 );
+  signal NLW_turtle_core_0_output_pins_UNCONNECTED : STD_LOGIC_VECTOR ( 15 downto 0 );
   attribute X_INTERFACE_INFO : string;
   attribute X_INTERFACE_INFO of clk : signal is "xilinx.com:signal:clock:1.0 CLK.CLK CLK";
   attribute X_INTERFACE_PARAMETER : string;
@@ -76,7 +76,6 @@ architecture STRUCTURE of design_1 is
 begin
   clk_1 <= clk;
   debounce_rst_Res <= rst_btn;
-  leds(15 downto 0) <= turtle_core_0_output_pin(15 downto 0);
   sw_1(15 downto 0) <= sw(15 downto 0);
 clk_wiz: component design_1_clk_wiz_0
      port map (
@@ -93,9 +92,9 @@ turtle_core_0: component design_1_turtle_core_0_0
      port map (
       clk_50MHz => debounce_clk_Res,
       input_ROM_bus(7 downto 0) => dist_mem_gen_0_spo(7 downto 0),
-      input_pin(15 downto 0) => sw_1(15 downto 0),
+      input_pins(15 downto 0) => B"0000000000000000",
       output_ROM_addr(14 downto 0) => turtle_core_0_output_ROM_addr(14 downto 0),
-      output_pin(15 downto 0) => turtle_core_0_output_pin(15 downto 0),
+      output_pins(15 downto 0) => NLW_turtle_core_0_output_pins_UNCONNECTED(15 downto 0),
       reset_rtl_0 => proc_sys_reset_0_peripheral_aresetn(0)
     );
 util_vector_logic_0: component design_1_util_vector_logic_0_0
