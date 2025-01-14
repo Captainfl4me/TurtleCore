@@ -2,7 +2,7 @@
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
---Date        : Tue Jan 14 11:57:40 2025
+--Date        : Tue Jan 14 15:33:16 2025
 --Host        : GBNicoArch running 64-bit unknown
 --Command     : generate_target turtle_top_level.bd
 --Design      : turtle_top_level
@@ -607,7 +607,7 @@ architecture STRUCTURE of turtle_top_level is
     o_addr_bus : out STD_LOGIC_VECTOR ( 15 downto 0 )
   );
   end component turtle_top_level_turtle_processing_un_0_0;
-  component turtle_top_level_rst_clk_50MHz_50M_1 is
+  component turtle_top_level_rst_clk_50MHz_50M_4 is
   port (
     slowest_sync_clk : in STD_LOGIC;
     ext_reset_in : in STD_LOGIC;
@@ -620,7 +620,7 @@ architecture STRUCTURE of turtle_top_level is
     interconnect_aresetn : out STD_LOGIC_VECTOR ( 0 to 0 );
     peripheral_aresetn : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
-  end component turtle_top_level_rst_clk_50MHz_50M_1;
+  end component turtle_top_level_rst_clk_50MHz_50M_4;
   component turtle_top_level_MMU_0_0 is
   port (
     i_clk : in STD_LOGIC;
@@ -682,7 +682,7 @@ architecture STRUCTURE of turtle_top_level is
     M_AXI_RREADY : out STD_LOGIC
   );
   end component turtle_top_level_MMU_0_0;
-  component turtle_top_level_blk_mem_gen_0_1 is
+  component turtle_top_level_blk_mem_gen_0_4 is
   port (
     clka : in STD_LOGIC;
     rsta : in STD_LOGIC;
@@ -692,7 +692,7 @@ architecture STRUCTURE of turtle_top_level is
     douta : out STD_LOGIC_VECTOR ( 7 downto 0 );
     rsta_busy : out STD_LOGIC
   );
-  end component turtle_top_level_blk_mem_gen_0_1;
+  end component turtle_top_level_blk_mem_gen_0_4;
   signal ACLK_1 : STD_LOGIC;
   signal MMU_0_M_AXI_ARADDR : STD_LOGIC_VECTOR ( 15 downto 0 );
   signal MMU_0_M_AXI_ARBURST : STD_LOGIC_VECTOR ( 1 downto 0 );
@@ -968,7 +968,7 @@ axi_interconnect_0: entity work.turtle_top_level_axi_interconnect_0_0
       S00_AXI_wstrb => MMU_0_M_AXI_WSTRB(0),
       S00_AXI_wvalid => MMU_0_M_AXI_WVALID
     );
-blk_mem_gen_0: component turtle_top_level_blk_mem_gen_0_1
+blk_mem_gen_0: component turtle_top_level_blk_mem_gen_0_4
      port map (
       addra(14 downto 0) => MMU_0_o_addr_RAM(14 downto 0),
       clka => clk_50MHz_1,
@@ -978,7 +978,7 @@ blk_mem_gen_0: component turtle_top_level_blk_mem_gen_0_1
       rsta_busy => NLW_blk_mem_gen_0_rsta_busy_UNCONNECTED,
       wea(0) => MMU_0_o_write_RAM
     );
-rst_clk_50MHz_50M: component turtle_top_level_rst_clk_50MHz_50M_1
+rst_clk_50MHz_50M: component turtle_top_level_rst_clk_50MHz_50M_4
      port map (
       aux_reset_in => '1',
       bus_struct_reset(0) => NLW_rst_clk_50MHz_50M_bus_struct_reset_UNCONNECTED(0),

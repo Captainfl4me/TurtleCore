@@ -160,8 +160,8 @@
       "rst_clk_50MHz_50M": {
         "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
         "ip_revision": "15",
-        "xci_name": "turtle_top_level_rst_clk_50MHz_50M_1",
-        "xci_path": "ip/turtle_top_level_rst_clk_50MHz_50M_1/turtle_top_level_rst_clk_50MHz_50M_1.xci",
+        "xci_name": "turtle_top_level_rst_clk_50MHz_50M_4",
+        "xci_path": "ip/turtle_top_level_rst_clk_50MHz_50M_4/turtle_top_level_rst_clk_50MHz_50M_4.xci",
         "inst_hier_path": "rst_clk_50MHz_50M"
       },
       "MMU_0": {
@@ -635,8 +635,8 @@
       "blk_mem_gen_0": {
         "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
         "ip_revision": "8",
-        "xci_name": "turtle_top_level_blk_mem_gen_0_1",
-        "xci_path": "ip/turtle_top_level_blk_mem_gen_0_1/turtle_top_level_blk_mem_gen_0_1.xci",
+        "xci_name": "turtle_top_level_blk_mem_gen_0_4",
+        "xci_path": "ip/turtle_top_level_blk_mem_gen_0_4/turtle_top_level_blk_mem_gen_0_4.xci",
         "inst_hier_path": "blk_mem_gen_0",
         "parameters": {
           "Enable_A": {

@@ -56,7 +56,7 @@ USE ieee.numeric_std.ALL;
 LIBRARY blk_mem_gen_v8_4_8;
 USE blk_mem_gen_v8_4_8.blk_mem_gen_v8_4_8;
 
-ENTITY turtle_top_level_blk_mem_gen_0_1 IS
+ENTITY turtle_top_level_blk_mem_gen_0_4 IS
   PORT (
     clka : IN STD_LOGIC;
     rsta : IN STD_LOGIC;
@@ -66,11 +66,11 @@ ENTITY turtle_top_level_blk_mem_gen_0_1 IS
     douta : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
     rsta_busy : OUT STD_LOGIC
   );
-END turtle_top_level_blk_mem_gen_0_1;
+END turtle_top_level_blk_mem_gen_0_4;
 
-ARCHITECTURE turtle_top_level_blk_mem_gen_0_1_arch OF turtle_top_level_blk_mem_gen_0_1 IS
+ARCHITECTURE turtle_top_level_blk_mem_gen_0_4_arch OF turtle_top_level_blk_mem_gen_0_4 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings : STRING;
-  ATTRIBUTE DowngradeIPIdentifiedWarnings OF turtle_top_level_blk_mem_gen_0_1_arch: ARCHITECTURE IS "yes";
+  ATTRIBUTE DowngradeIPIdentifiedWarnings OF turtle_top_level_blk_mem_gen_0_4_arch: ARCHITECTURE IS "yes";
   COMPONENT blk_mem_gen_v8_4_8 IS
     GENERIC (
       C_FAMILY : STRING;
@@ -216,11 +216,11 @@ ARCHITECTURE turtle_top_level_blk_mem_gen_0_1_arch OF turtle_top_level_blk_mem_g
     );
   END COMPONENT blk_mem_gen_v8_4_8;
   ATTRIBUTE X_CORE_INFO : STRING;
-  ATTRIBUTE X_CORE_INFO OF turtle_top_level_blk_mem_gen_0_1_arch: ARCHITECTURE IS "blk_mem_gen_v8_4_8,Vivado 2024.1";
+  ATTRIBUTE X_CORE_INFO OF turtle_top_level_blk_mem_gen_0_4_arch: ARCHITECTURE IS "blk_mem_gen_v8_4_8,Vivado 2024.1";
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
-  ATTRIBUTE CHECK_LICENSE_TYPE OF turtle_top_level_blk_mem_gen_0_1_arch : ARCHITECTURE IS "turtle_top_level_blk_mem_gen_0_1,blk_mem_gen_v8_4_8,{}";
+  ATTRIBUTE CHECK_LICENSE_TYPE OF turtle_top_level_blk_mem_gen_0_4_arch : ARCHITECTURE IS "turtle_top_level_blk_mem_gen_0_4,blk_mem_gen_v8_4_8,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF turtle_top_level_blk_mem_gen_0_1_arch: ARCHITECTURE IS "turtle_top_level_blk_mem_gen_0_1,blk_mem_gen_v8_4_8,{x_ipProduct=Vivado 2024.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=blk_mem_gen,x_ipVersion=8.4,x_ipCoreRevision=8,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_FAMILY=artix7,C_XDEVICEFAMILY=artix7,C_ELABORATION_DIR=./,C_INTERFACE_TYPE=0,C_AXI_TYPE=1,C_AXI_SLAVE_TYPE=0,C_USE_BRAM_BLOCK=0,C_ENABLE_32BIT_ADDRESS=0,C_CTRL_ECC_ALGO=NONE,C_HAS_AXI_ID=0,C_AXI_ID_WIDTH=4,C_MEM_TYPE=0,C_BYTE_SIZE=9,C_ALGORITHM=1,C_PRIM_TYPE=1,C_LOAD_INIT_FILE=0,C_INIT" & 
+  ATTRIBUTE CORE_GENERATION_INFO OF turtle_top_level_blk_mem_gen_0_4_arch: ARCHITECTURE IS "turtle_top_level_blk_mem_gen_0_4,blk_mem_gen_v8_4_8,{x_ipProduct=Vivado 2024.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=blk_mem_gen,x_ipVersion=8.4,x_ipCoreRevision=8,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_FAMILY=artix7,C_XDEVICEFAMILY=artix7,C_ELABORATION_DIR=./,C_INTERFACE_TYPE=0,C_AXI_TYPE=1,C_AXI_SLAVE_TYPE=0,C_USE_BRAM_BLOCK=0,C_ENABLE_32BIT_ADDRESS=0,C_CTRL_ECC_ALGO=NONE,C_HAS_AXI_ID=0,C_AXI_ID_WIDTH=4,C_MEM_TYPE=0,C_BYTE_SIZE=9,C_ALGORITHM=1,C_PRIM_TYPE=1,C_LOAD_INIT_FILE=0,C_INIT" & 
 "_FILE_NAME=no_coe_file_loaded,C_INIT_FILE=NONE,C_USE_DEFAULT_DATA=1,C_DEFAULT_DATA=0,C_HAS_RSTA=1,C_RST_PRIORITY_A=CE,C_RSTRAM_A=0,C_INITA_VAL=0,C_HAS_ENA=0,C_HAS_REGCEA=0,C_USE_BYTE_WEA=0,C_WEA_WIDTH=1,C_WRITE_MODE_A=WRITE_FIRST,C_WRITE_WIDTH_A=8,C_READ_WIDTH_A=8,C_WRITE_DEPTH_A=32768,C_READ_DEPTH_A=32768,C_ADDRA_WIDTH=15,C_HAS_RSTB=0,C_RST_PRIORITY_B=CE,C_RSTRAM_B=0,C_INITB_VAL=0,C_HAS_ENB=0,C_HAS_REGCEB=0,C_USE_BYTE_WEB=0,C_WEB_WIDTH=1,C_WRITE_MODE_B=WRITE_FIRST,C_WRITE_WIDTH_B=8,C_READ_WIDTH" & 
 "_B=8,C_WRITE_DEPTH_B=32768,C_READ_DEPTH_B=32768,C_ADDRB_WIDTH=15,C_HAS_MEM_OUTPUT_REGS_A=0,C_HAS_MEM_OUTPUT_REGS_B=0,C_HAS_MUX_OUTPUT_REGS_A=0,C_HAS_MUX_OUTPUT_REGS_B=0,C_MUX_PIPELINE_STAGES=0,C_HAS_SOFTECC_INPUT_REGS_A=0,C_HAS_SOFTECC_OUTPUT_REGS_B=0,C_USE_SOFTECC=0,C_USE_ECC=0,C_EN_ECC_PIPE=0,C_READ_LATENCY_A=1,C_READ_LATENCY_B=1,C_HAS_INJECTERR=0,C_SIM_COLLISION_CHECK=ALL,C_COMMON_CLK=0,C_DISABLE_WARN_BHV_COLL=0,C_EN_SLEEP_PIN=0,C_USE_URAM=0,C_EN_RDADDRA_CHG=0,C_EN_RDADDRB_CHG=0,C_EN_DEEPSLEE" & 
 "P_PIN=0,C_EN_SHUTDOWN_PIN=0,C_EN_SAFETY_CKT=1,C_DISABLE_WARN_BHV_RANGE=0,C_COUNT_36K_BRAM=8,C_COUNT_18K_BRAM=0,C_EST_POWER_SUMMARY=Estimated Power for IP     _     2.535699 mW}";
@@ -358,4 +358,4 @@ BEGIN
       s_axi_injectsbiterr => '0',
       s_axi_injectdbiterr => '0'
     );
-END turtle_top_level_blk_mem_gen_0_1_arch;
+END turtle_top_level_blk_mem_gen_0_4_arch;

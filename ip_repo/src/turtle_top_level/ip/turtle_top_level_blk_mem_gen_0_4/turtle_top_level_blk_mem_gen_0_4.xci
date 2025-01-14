@@ -1,14 +1,14 @@
 {
   "schema": "xilinx.com:schema:json_instance:1.0",
   "ip_inst": {
-    "xci_name": "turtle_top_level_blk_mem_gen_0_1",
+    "xci_name": "turtle_top_level_blk_mem_gen_0_4",
     "cell_name": "blk_mem_gen_0",
     "component_reference": "xilinx.com:ip:blk_mem_gen:8.4",
     "ip_revision": "8",
-    "gen_directory": "../../../turtlecore/turtlecore.gen/sources_1/ip/turtle_top_level_blk_mem_gen_0_1",
+    "gen_directory": ".",
     "parameters": {
       "component_parameters": {
-        "Component_Name": [ { "value": "turtle_top_level_blk_mem_gen_0_1", "resolve_type": "user", "usage": "all" } ],
+        "Component_Name": [ { "value": "turtle_top_level_blk_mem_gen_0_4", "resolve_type": "user", "usage": "all" } ],
         "Interface_Type": [ { "value": "Native", "resolve_type": "user", "usage": "all" } ],
         "AXI_Type": [ { "value": "AXI4_Full", "resolve_type": "user", "usage": "all" } ],
         "AXI_Slave_Type": [ { "value": "Memory_Slave", "resolve_type": "user", "usage": "all" } ],
@@ -176,11 +176,11 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "8" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../turtlecore/turtlecore.gen/sources_1/ip/turtle_top_level_blk_mem_gen_0_1" } ],
+        "OUTPUTDIR": [ { "value": "." } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2024.1" } ],
-        "SYNTHESISFLOW": [ { "value": "GLOBAL" } ]
+        "SYNTHESISFLOW": [ { "value": "OUT_OF_CONTEXT" } ]
       }
     },
     "boundary": {

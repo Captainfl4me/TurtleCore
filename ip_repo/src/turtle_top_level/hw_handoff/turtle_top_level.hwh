@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Jan 14 11:57:40 2025" VIVADOVERSION="2024.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Jan 14 15:33:16 2025" VIVADOVERSION="2024.1">
 
   <SYSTEMINFO ARCH="artix7" DEVICE="7a35t" NAME="turtle_top_level" PACKAGE="cpg236" SPEEDGRADE="-1"/>
 
@@ -1191,7 +1191,7 @@
         <PARAMETER NAME="CTRL_ECC_ALGO" VALUE="NONE"/>
         <PARAMETER NAME="Coe_File" VALUE="no_coe_file_loaded"/>
         <PARAMETER NAME="Collision_Warnings" VALUE="ALL"/>
-        <PARAMETER NAME="Component_Name" VALUE="turtle_top_level_blk_mem_gen_0_1"/>
+        <PARAMETER NAME="Component_Name" VALUE="turtle_top_level_blk_mem_gen_0_4"/>
         <PARAMETER NAME="Disable_Collision_Warnings" VALUE="false"/>
         <PARAMETER NAME="Disable_Out_of_Range_Warnings" VALUE="false"/>
         <PARAMETER NAME="ECC" VALUE="false"/>
@@ -1261,7 +1261,7 @@
             <CONNECTION INSTANCE="MMU_0" PORT="o_addr_RAM"/>
           </CONNECTIONS>
         </PORT>
-        <PORT CLKFREQUENCY="50000000" DIR="I" NAME="clka" SIGIS="clk" SIGNAME="External_Ports_clk_50MHz">
+        <PORT DIR="I" NAME="clka" SIGIS="clk" SIGNAME="External_Ports_clk_50MHz">
           <CONNECTIONS>
             <CONNECTION INSTANCE="External_Ports" PORT="clk_50MHz"/>
           </CONNECTIONS>
@@ -1276,7 +1276,7 @@
             <CONNECTION INSTANCE="MMU_0" PORT="i_data_RAM"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="rsta" POLARITY="ACTIVE_HIGH" SIGIS="rst" SIGNAME="rst_clk_50MHz_50M_peripheral_reset">
+        <PORT DIR="I" NAME="rsta" SIGIS="rst" SIGNAME="rst_clk_50MHz_50M_peripheral_reset">
           <CONNECTIONS>
             <CONNECTION INSTANCE="rst_clk_50MHz_50M" PORT="peripheral_reset"/>
           </CONNECTIONS>
@@ -1322,7 +1322,7 @@
         <PARAMETER NAME="C_NUM_INTERCONNECT_ARESETN" VALUE="1"/>
         <PARAMETER NAME="C_NUM_PERP_ARESETN" VALUE="1"/>
         <PARAMETER NAME="C_NUM_PERP_RST" VALUE="1"/>
-        <PARAMETER NAME="Component_Name" VALUE="turtle_top_level_rst_clk_50MHz_50M_1"/>
+        <PARAMETER NAME="Component_Name" VALUE="turtle_top_level_rst_clk_50MHz_50M_4"/>
         <PARAMETER NAME="RESET_BOARD_INTERFACE" VALUE="Custom"/>
         <PARAMETER NAME="USE_BOARD_FLOW" VALUE="false"/>
         <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>

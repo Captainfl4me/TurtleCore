@@ -53,7 +53,7 @@
 `timescale 1ns/1ps
 
 (* DowngradeIPIdentifiedWarnings = "yes" *)
-module turtle_top_level_blk_mem_gen_0_1 (
+module turtle_top_level_blk_mem_gen_0_4 (
   clka,
   rsta,
   wea,
